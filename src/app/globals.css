@@ -23,6 +23,15 @@ html {
   --color-error: #b91c1c;
   --sidebar-width: 260px;
   --layout-break: 900px;
+  /* Sidebar (dark blue rail) */
+  --sidebar-bg: #0d2137;
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-text: #e8eef5;
+  --sidebar-text-muted: #94a3b8;
+  --sidebar-nav-idle: rgba(255, 255, 255, 0.06);
+  --sidebar-nav-hover: rgba(255, 255, 255, 0.12);
+  --sidebar-nav-active-bg: rgba(26, 74, 114, 0.85);
+  --sidebar-nav-active-border: #3d7ab8;
 }
 
 body {
@@ -86,8 +95,8 @@ body {
 }
 
 .sidebar {
-  border-right: 1px solid var(--color-border-soft);
-  background: var(--color-bg-surface);
+  border-right: 1px solid var(--sidebar-border);
+  background: var(--sidebar-bg);
   padding: 24px 14px;
 }
 
@@ -98,13 +107,13 @@ body {
 .sidebar h1 {
   margin: 0;
   font-size: clamp(1rem, 2.5vw, 1.15rem);
-  color: var(--color-brand-dark);
+  color: var(--sidebar-text);
 }
 
 .sidebar-subtitle {
   margin: 6px 0 18px;
   font-size: 0.8rem;
-  color: #5f6b7a;
+  color: var(--sidebar-text-muted);
 }
 
 .sidebar nav {
@@ -112,9 +121,38 @@ body {
   gap: 8px;
 }
 
-.nav-item {
+/* Sidebar navigation only (dark rail) */
+.sidebar .nav-item {
   display: block;
   text-align: left;
+  border: 1px solid var(--sidebar-border);
+  background: var(--sidebar-nav-idle);
+  color: var(--sidebar-text);
+  text-decoration: none;
+  border-radius: 8px;
+  padding: 12px 14px;
+  min-height: 44px;
+  cursor: pointer;
+  transition: border-color 120ms ease, background 120ms ease, color 120ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sidebar .nav-item:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: var(--sidebar-nav-hover);
+  color: #ffffff;
+}
+
+.sidebar .nav-item.active {
+  background: var(--sidebar-nav-active-bg);
+  border-color: var(--sidebar-nav-active-border);
+  color: #ffffff;
+}
+
+/* Inline actions in main content (not-found link, error reset) */
+.content .nav-item {
+  display: inline-block;
+  text-align: center;
   border: 1px solid var(--color-border);
   background: var(--color-bg-soft);
   color: #1e293b;
@@ -127,14 +165,9 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-.nav-item:hover {
+.content .nav-item:hover {
   border-color: #9fb0c5;
   background: #f2f7fd;
-}
-
-.nav-item.active {
-  background: #dbeafe;
-  border-color: #8bb7f0;
 }
 
 .content {
@@ -317,7 +350,7 @@ body {
 
   .sidebar.sidebar--open {
     transform: translateX(0);
-    box-shadow: 6px 0 28px rgba(15, 23, 42, 0.18);
+    box-shadow: 8px 0 36px rgba(0, 0, 0, 0.35);
   }
 
   .content {
