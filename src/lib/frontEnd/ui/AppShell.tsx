@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { sidebarNavItems } from "@/lib/frontEnd/components/sidebarNav";
-import { useMediaQuery } from "@/ui/hooks/useMediaQuery";
+import { sidebarNavItems } from "@/lib/frontEnd/ui/components/sidebarNav";
+import { useMediaQuery } from "@/lib/frontEnd/ui/hooks/useMediaQuery";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const [navOpen, setNavOpen] = useState(false);

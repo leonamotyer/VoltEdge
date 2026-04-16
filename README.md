@@ -28,25 +28,23 @@ Open [http://localhost:3000](http://localhost:3000) (Next.js default port).
 
 ## Project layout
 
-- `src/app/` — App Router: `layout.tsx`, `page.tsx`, route segments (`curtailment`, `load-and-storage`, `network-and-fiber`), `error.tsx`, `not-found.tsx`, `globals.css`
-- `src/ui/` — Client shell (`AppShell.tsx`), charts, dashboard views
-- `src/lib/Backend/` — demo repositories (AESO, SCADA, turbine) and mocks
-- `src/lib/frontEnd/` — shared `demoSite.ts`, loaders, chart transforms, `derived/` analytics, `dashboard/guards.ts`
+- `src/app/` — Next.js App Router: `layout.tsx`, routes, `globals.css`
+- `src/lib/Backend/` — data layer only: repositories (`aeso/`, `scada/`, `turbine/`), domain mocks (`*.mock.charts.ts`), `simulation/` sizing mocks, `dashboardMocks/` (composed chart payloads + types)
+- `src/lib/frontEnd/` — UI and app logic: `ui/` (shell, charts, dashboard views, hooks), route loaders (`curtailment/`, `load-and-storage/`, `network-and-fiber/`), `demoSite.ts`, `derived/`, `transforms/`, `dashboard/guards.ts`
 
 ## Deployment (Vercel)
 
-This repo is **Next.js**, not Vite. Vercel must use the **Next.js** builder (it reads `.next/` for you). Do **not** point Output Directory at `dist/`.
+This repo is **Next.js**, not Vite. If Vercel still used the old **Vite / static** preset, the deployment can look “successful” but every URL returns **404** (no Next server, only static files).
 
-1. **Project → Settings → General**
-   - **Framework Preset:** choose **Next.js** (use **Override** if it still says Vite or “Other”).
-   - **Root Directory:** leave blank unless this app lives in a subfolder of the Git repo.
-2. **Build & Development Settings**
-   - **Build Command:** leave default, or set `npm run build`.
-   - **Output Directory:** leave **empty** (clear any old `dist` value from the Vite days).
-   - **Install Command:** default `npm install` is fine.
+**In the repo:** `vercel.json` sets `"framework": "nextjs"` and `npm run build` so new projects pick the right builder from Git.
+
+**In the dashboard (if a project was created before the Next migration):**
+
+1. **Settings → General → Framework Preset** → **Next.js** (override if needed).
+2. **Settings → Build & Development** → **Output Directory** → **empty** (remove `dist`).
 3. Redeploy.
 
-If you still see **“no public output directory”** or similar, the preset or an old **Output Directory** override is almost always the cause—Next does not emit a `dist` folder like Vite did.
+**Root Directory** should stay empty unless this app lives in a monorepo subfolder.
 
 ## License
 

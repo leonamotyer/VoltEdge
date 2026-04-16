@@ -1,5 +1,5 @@
 import { loadNetworkAndFiberPageData } from "@/lib/frontEnd/networkAndFiber/page";
-import { NetworkDashboard } from "@/ui/dashboard/DashboardViews";
+import { NetworkDashboard } from "@/lib/frontEnd/ui/dashboard/DashboardViews";
 
 export default async function NetworkAndFiberPage() {
   const data = await loadNetworkAndFiberPageData();

@@ -1,5 +1,5 @@
 import { loadLoadAndStoragePageData } from "@/lib/frontEnd/loadAndStorage/page";
-import { LoadStorageDashboard } from "@/ui/dashboard/DashboardViews";
+import { LoadStorageDashboard } from "@/lib/frontEnd/ui/dashboard/DashboardViews";
 
 export default async function LoadAndStoragePage() {
   const data = await loadLoadAndStoragePageData();

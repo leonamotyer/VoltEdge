@@ -14,7 +14,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { useIsCompactCharts } from "@/ui/hooks/useMediaQuery";
+import { useIsCompactCharts } from "@/lib/frontEnd/ui/hooks/useMediaQuery";
 
 export function SimpleLineChart({
   data,

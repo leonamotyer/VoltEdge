@@ -1,5 +1,5 @@
 import { loadCurtailmentPageData } from "@/lib/frontEnd/curtailment/page";
-import { CurtailmentDashboard } from "@/ui/dashboard/DashboardViews";
+import { CurtailmentDashboard } from "@/lib/frontEnd/ui/dashboard/DashboardViews";
 
 export default async function CurtailmentPage() {
   const data = await loadCurtailmentPageData();

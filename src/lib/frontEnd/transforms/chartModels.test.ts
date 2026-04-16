@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { DashboardChartMocks } from "../../Backend/mocks/types";
+import type { DashboardChartMocks } from "../../Backend/dashboardMocks/types";
 import {
   buildCurtailmentSeries,
   buildLoadStorageSeries,

@@ -1,6 +1,6 @@
 "use client";
 
-import { getDashboardChartMocks } from "@/lib/Backend/mocks";
+import { getDashboardChartMocks } from "@/lib/Backend/dashboardMocks";
 import {
   isCurtailmentData,
   isLoadAndStorageData,
@@ -11,7 +11,7 @@ import {
   buildLoadStorageSeries,
   buildNetworkSeries,
 } from "@/lib/frontEnd/transforms/chartModels";
-import { SimpleBarChart, SimpleLineChart, SimplePieChart } from "@/ui/components/charts/SimpleCharts";
+import { SimpleBarChart, SimpleLineChart, SimplePieChart } from "@/lib/frontEnd/ui/components/charts/SimpleCharts";
 
 const dashboardChartMocks = getDashboardChartMocks();
 
@@ -70,7 +70,7 @@ export function CurtailmentDashboard({ data }: { data: unknown }) {
         <SimpleLineChart data={series.hourly} xKey="timestamp" yKey="gapMWh" color="#1a4a72" />
       </section>
       <section className="panel">
-        <h4>Monthly Curtailment (mock — `src/lib/Backend/mocks/aeso.mock.charts.ts`)</h4>
+        <h4>Monthly Curtailment (mock — `src/lib/Backend/aeso/aeso.mock.charts.ts`)</h4>
         <SimpleBarChart data={series.monthly} xKey="month" yKey="totalCurtailmentMWh" color="#e67e22" />
       </section>
       <section className="panel">
@@ -115,7 +115,7 @@ export function LoadStorageDashboard({ data }: { data: unknown }) {
         <SimplePieChart data={series.energyMix} />
       </section>
       <section className="panel">
-        <h4>Battery sweep revenue (mock — `src/lib/Backend/mocks/simulation.mock.charts.ts`)</h4>
+        <h4>Battery sweep revenue (mock — `src/lib/Backend/simulation/simulation.mock.charts.ts`)</h4>
         <SimpleLineChart data={series.sweep} xKey="storageMWh" yKey="estimatedGrossRevenueCad" color="#0e9e6a" />
       </section>
       <section className="panel">

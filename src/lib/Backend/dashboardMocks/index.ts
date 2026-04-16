@@ -1,6 +1,6 @@
-import { getAesoCurtailmentMonthlyMock } from "./aeso.mock.charts";
+import { getAesoCurtailmentMonthlyMock } from "../aeso/aeso.mock.charts";
 import { getScadaHourlyWindProfileMock } from "../scada/scada.mock.charts";
-import { getBatterySweepMock, getDispatchTimelineMock } from "./simulation.mock.charts";
+import { getBatterySweepMock, getDispatchTimelineMock } from "../simulation/simulation.mock.charts";
 import type { DashboardChartMocks } from "./types";
 
 /** Composed mock payloads for dashboard charts, grouped by backend source. */
