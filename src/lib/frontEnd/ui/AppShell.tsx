@@ -3,8 +3,23 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import type { NavIconKey } from "@/lib/frontEnd/ui/components/sidebarNav";
 import { sidebarNavItems } from "@/lib/frontEnd/ui/components/sidebarNav";
+import { NavIconCurtailment, NavIconNetwork, NavIconStorage } from "@/lib/frontEnd/ui/components/NavIcon";
 import { useMediaQuery } from "@/lib/frontEnd/ui/hooks/useMediaQuery";
+
+function NavIcon({ name, className }: { name: NavIconKey; className?: string }) {
+  switch (name) {
+    case "curtailment":
+      return <NavIconCurtailment className={className} />;
+    case "load-storage":
+      return <NavIconStorage className={className} />;
+    case "network-fiber":
+      return <NavIconNetwork className={className} />;
+    default:
+      return null;
+  }
+}
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const [navOpen, setNavOpen] = useState(false);
@@ -41,6 +56,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <main className="app-shell">
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
       <button
         type="button"
         className="nav-toggle"
@@ -78,8 +96,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 href={item.href}
                 className={active ? "nav-item active" : "nav-item"}
                 prefetch
+                aria-current={active ? "page" : undefined}
               >
-                {item.label}
+                <span className="nav-item-inner">
+                  <NavIcon name={item.icon} className="nav-item-icon" />
+                  <span className="nav-item-label">{item.label}</span>
+                </span>
               </Link>
             );
           })}
@@ -88,13 +110,26 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       <section className="content">
         <header className="ve-header">
-          <h2>VoltEdge MDC — Renewable Curtailment Intelligence</h2>
+          <div className="ve-header-row">
+            <h2>VoltEdge MDC — Renewable Curtailment Intelligence</h2>
+            <span className="ve-badge" title="All figures use demo repositories until live feeds are wired">
+              Demo data
+            </span>
+          </div>
           <p>
             Curtailment analysis, load and storage sizing, and network feasibility in one decision
             view.
           </p>
         </header>
-        {children}
+        <div id="main-content" className="content-main" tabIndex={-1}>
+          {children}
+        </div>
+        <footer className="content-foot" role="contentinfo">
+          <p>
+            <strong>Prototype.</strong> Numbers illustrate layout and flow; replace repositories with
+            production sources before investment decisions.
+          </p>
+        </footer>
       </section>
     </main>
   );
