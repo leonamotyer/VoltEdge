@@ -7,35 +7,38 @@ html {
 }
 
 :root {
-  /* Cool canvas — blue–green mist (dashboard “studio” feel, not a Dribbble clone). */
-  --color-bg-app: #e8f2f3;
+  /*
+   * Contemporary-style rhythm (generous spacing, card-first layout) per TypeUI “Contemporary”
+   * patterns — https://www.typeui.sh/design-skills/contemporary — with our own palette:
+   * ink blue, soft green, burnt orange (not purple/pink).
+   */
+  --color-bg-app: #eef0f5;
   --color-bg-surface: #ffffff;
-  --color-bg-soft: #f0faf7;
-  --color-text-primary: #0f2942;
-  --color-text-muted: #5a7282;
-  --color-border: #c5dce0;
-  --color-border-soft: #dceef0;
-  --color-border-panel: rgba(15, 78, 99, 0.1);
-  --color-accent-blue: #1e40af;
-  --color-chart-blue: #2563eb;
-  --color-chart-teal: #10b981;
-  --color-chart-cyan: #06b6d4;
-  --color-accent-teal: #0f766e;
-  --color-accent-cyan: #0891b2;
+  --color-bg-soft: #f3f7f5;
+  --color-text-primary: #111827;
+  --color-text-muted: #5c6678;
+  --color-border: #d4d9e3;
+  --color-border-soft: #e6e9f0;
+  --color-border-panel: rgba(26, 58, 82, 0.1);
+  --color-accent-blue: #1e3a52;
+  --color-chart-blue: #1a3a52;
+  --color-chart-green: #6eb89a;
+  --color-chart-orange: #c05621;
   --color-accent-red: #dc2626;
   --color-brand-dark: #0a1628;
   --color-error: #b91c1c;
+  --color-focus-ring: #3d6a8c;
   --sidebar-width: 260px;
   --layout-break: 900px;
-  /* Sidebar — deep slate with teal active hint */
+  /* Sidebar — dark blue rail; active = soft green edge (energy / “go”) */
   --sidebar-bg: #0a1628;
   --sidebar-border: rgba(255, 255, 255, 0.09);
   --sidebar-text: #e8eef5;
   --sidebar-text-muted: #94a3b8;
   --sidebar-nav-idle: rgba(255, 255, 255, 0.06);
   --sidebar-nav-hover: rgba(255, 255, 255, 0.11);
-  --sidebar-nav-active-bg: rgba(37, 99, 235, 0.22);
-  --sidebar-nav-active-border: #2dd4bf;
+  --sidebar-nav-active-bg: rgba(110, 184, 154, 0.16);
+  --sidebar-nav-active-border: #6eb89a;
 }
 
 body {
@@ -48,7 +51,7 @@ body {
 
 /* Consistency + control: visible focus for keyboard users (Nielsen #4, accessibility). */
 :focus-visible {
-  outline: 2px solid var(--color-chart-blue);
+  outline: 2px solid var(--color-focus-ring);
   outline-offset: 2px;
 }
 
@@ -103,7 +106,7 @@ a:focus-visible {
 }
 
 .nav-toggle:focus-visible {
-  outline: 2px solid var(--color-chart-blue);
+  outline: 2px solid var(--color-focus-ring);
   outline-offset: 2px;
 }
 
@@ -131,7 +134,7 @@ a:focus-visible {
 .sidebar {
   border-right: 1px solid var(--sidebar-border);
   background: var(--sidebar-bg);
-  padding: 24px 14px;
+  padding: 28px 16px;
 }
 
 .sidebar-brand {
@@ -152,7 +155,7 @@ a:focus-visible {
 
 .sidebar nav {
   display: grid;
-  gap: 8px;
+  gap: 10px;
 }
 
 .nav-item-inner {
@@ -221,15 +224,15 @@ a:focus-visible {
 }
 
 .content .nav-item:hover {
-  border-color: #8ebdd0;
-  background: #eef8f6;
+  border-color: #b8c9d4;
+  background: #f3f7f5;
 }
 
 .content {
-  --content-pad-top: clamp(14px, 3vw, 24px);
-  --content-pad-right: clamp(14px, 3vw, 24px);
-  --content-pad-bottom: clamp(14px, 3vw, 24px);
-  --content-pad-left: clamp(14px, 3vw, 24px);
+  --content-pad-top: clamp(18px, 3.5vw, 28px);
+  --content-pad-right: clamp(18px, 3.5vw, 28px);
+  --content-pad-bottom: clamp(18px, 3.5vw, 28px);
+  --content-pad-left: clamp(18px, 3.5vw, 28px);
   padding: var(--content-pad-top) var(--content-pad-right) var(--content-pad-bottom)
     var(--content-pad-left);
   min-width: 0;
@@ -242,12 +245,23 @@ a:focus-visible {
   margin-left: calc(-1 * var(--content-pad-left));
   margin-right: calc(-1 * var(--content-pad-right));
   margin-top: calc(-1 * var(--content-pad-top));
-  margin-bottom: 1rem;
-  padding: clamp(1rem, 3vw, 1.25rem) var(--content-pad-right) clamp(1rem, 3vw, 1.25rem)
+  margin-bottom: 1.25rem;
+  padding: clamp(1.1rem, 3vw, 1.35rem) var(--content-pad-right) clamp(1.1rem, 3vw, 1.35rem)
     var(--content-pad-left);
   color: #ffffff;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: none;
   box-shadow: none;
+}
+
+.ve-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-chart-green), var(--color-chart-orange));
+  opacity: 0.92;
 }
 
 .ve-header-row {
@@ -260,24 +274,25 @@ a:focus-visible {
 
 .ve-badge {
   display: inline-block;
-  padding: 0.28rem 0.65rem;
+  padding: 0.3rem 0.7rem;
   border-radius: 999px;
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  background: rgba(255, 255, 255, 0.18);
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  color: #f1f5f9;
+  background: rgba(192, 86, 33, 0.22);
+  border: 1px solid rgba(253, 186, 116, 0.45);
+  color: #ffedd5;
   white-space: nowrap;
 }
 
 .ve-header h2 {
   margin: 0;
   flex: 1 1 12rem;
-  font-size: clamp(1rem, 4vw, 1.35rem);
-  line-height: 1.25;
-  letter-spacing: -0.02em;
+  font-size: clamp(1.05rem, 4vw, 1.42rem);
+  line-height: 1.22;
+  font-weight: 700;
+  letter-spacing: -0.025em;
 }
 
 .ve-header p {
@@ -314,7 +329,7 @@ a:focus-visible {
   height: 3px;
   border-radius: 999px;
   margin-bottom: 1rem;
-  background: linear-gradient(90deg, var(--color-chart-teal), var(--color-chart-blue));
+  background: linear-gradient(90deg, var(--color-chart-green), var(--color-chart-orange));
   animation: route-load-pulse 1.1s ease-in-out infinite;
 }
 
@@ -333,13 +348,13 @@ a:focus-visible {
 .skeleton-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: 16px;
+  margin-bottom: 16px;
 }
 
 .skeleton {
-  border-radius: 14px;
-  background: linear-gradient(110deg, #dbeafe 8%, #ecfdf5 18%, #dbeafe 33%);
+  border-radius: 16px;
+  background: linear-gradient(110deg, #e2e8f0 8%, #ecfdf3 18%, #fde8d9 33%);
   background-size: 200% 100%;
   animation: skeleton-shimmer 1.2s ease-in-out infinite;
 }
@@ -391,7 +406,7 @@ a:focus-visible {
   }
 
   .skeleton {
-    background: #e0f2f1;
+    background: #e8ebe9;
   }
 
   .route-loading-bar {
@@ -401,12 +416,12 @@ a:focus-visible {
 
 .section-header {
   position: relative;
-  font-size: clamp(0.95rem, 2.5vw, 1.02rem);
+  font-size: clamp(1rem, 2.6vw, 1.08rem);
   font-weight: 700;
   color: var(--color-text-primary);
-  padding: 0 0 0.5rem 0.85rem;
-  margin: 0 0 0.9rem 0;
-  letter-spacing: -0.015em;
+  padding: 0 0 0.55rem 0.9rem;
+  margin: 0 0 1rem 0;
+  letter-spacing: -0.02em;
   border-bottom: 1px solid var(--color-border-soft);
 }
 
@@ -414,48 +429,53 @@ a:focus-visible {
   content: "";
   position: absolute;
   left: 0;
-  top: 0.12em;
-  bottom: 0.55rem;
+  top: 0.1em;
+  bottom: 0.5rem;
   width: 4px;
   border-radius: 4px;
-  background: linear-gradient(180deg, var(--color-chart-blue), var(--color-chart-teal));
+  background: linear-gradient(
+    180deg,
+    var(--color-chart-blue) 0%,
+    var(--color-chart-green) 52%,
+    var(--color-chart-orange) 100%
+  );
 }
 
 .kpi-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: 16px;
+  margin-bottom: 20px;
 }
 
 .kpi-card {
-  --kpi-accent: var(--color-chart-teal);
+  --kpi-accent: var(--color-chart-green);
   background: var(--color-bg-surface);
-  border-radius: 14px;
-  padding: clamp(0.85rem, 2vw, 1rem) clamp(0.85rem, 2vw, 1rem) 0.9rem clamp(0.95rem, 2.2vw, 1.05rem);
+  border-radius: 16px;
+  padding: clamp(1rem, 2.2vw, 1.15rem) clamp(1rem, 2.2vw, 1.15rem) 1rem clamp(1.05rem, 2.4vw, 1.15rem);
   border: 1px solid var(--color-border-panel);
   border-left: 4px solid var(--kpi-accent);
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 12px 28px -16px rgba(37, 99, 235, 0.12);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 16px 36px -18px rgba(26, 58, 82, 0.14);
   min-width: 0;
   transition: box-shadow 180ms ease, transform 180ms ease, border-color 180ms ease;
 }
 
 .kpi-card:hover {
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06), 0 18px 36px -14px rgba(16, 185, 129, 0.14);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06), 0 22px 44px -16px rgba(110, 184, 154, 0.2);
   transform: translateY(-2px);
-  border-color: rgba(37, 99, 235, 0.14);
+  border-color: rgba(26, 58, 82, 0.12);
 }
 
 .kpi-card.blue {
   --kpi-accent: var(--color-chart-blue);
 }
 
-.kpi-card.cyan {
-  --kpi-accent: var(--color-chart-cyan);
+.kpi-card.green {
+  --kpi-accent: var(--color-chart-green);
 }
 
-.kpi-card.teal {
-  --kpi-accent: var(--color-chart-teal);
+.kpi-card.orange {
+  --kpi-accent: var(--color-chart-orange);
 }
 
 .kpi-card.red {
@@ -488,41 +508,41 @@ a:focus-visible {
 }
 
 .panel {
-  border-radius: 14px;
+  border-radius: 16px;
   border: 1px solid var(--color-border-panel);
   background: var(--color-bg-surface);
-  padding: clamp(12px, 2.5vw, 14px);
+  padding: clamp(14px, 2.8vw, 18px);
   min-width: 0;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 14px 32px -18px rgba(15, 118, 110, 0.1);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 16px 40px -20px rgba(26, 58, 82, 0.1);
   transition: box-shadow 180ms ease, border-color 180ms ease;
 }
 
 .panel:hover {
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06), 0 20px 40px -16px rgba(37, 99, 235, 0.12);
-  border-color: rgba(6, 182, 212, 0.28);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06), 0 24px 48px -18px rgba(192, 86, 33, 0.1);
+  border-color: rgba(110, 184, 154, 0.35);
 }
 
 .panel + .panel {
-  margin-top: 0.75rem;
+  margin-top: 1rem;
 }
 
 .panel h4 {
-  margin: 0 0 0.45rem 0;
+  margin: 0 0 0.5rem 0;
   color: var(--color-text-primary);
-  font-size: clamp(0.85rem, 2.2vw, 0.95rem);
+  font-size: clamp(0.88rem, 2.2vw, 0.98rem);
   line-height: 1.35;
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.012em;
 }
 
 .panel pre {
   margin: 0;
   overflow: auto;
   max-height: min(420px, 55vh);
-  background: linear-gradient(180deg, #f8fafc 0%, #f0fdf9 100%);
-  border-radius: 10px;
+  background: linear-gradient(180deg, #f8fafc 0%, #f4faf6 45%, #faf8f5 100%);
+  border-radius: 12px;
   border: 1px solid var(--color-border-soft);
-  padding: 10px;
+  padding: 12px;
   font-size: clamp(0.68rem, 1.8vw, 0.8rem);
   font-family: var(--font-mono), ui-monospace, monospace;
   -webkit-overflow-scrolling: touch;

@@ -12,7 +12,7 @@ import {
   buildNetworkSeries,
 } from "@/lib/frontEnd/transforms/chartModels";
 import { SimpleBarChart, SimpleLineChart, SimplePieChart } from "@/lib/frontEnd/ui/components/charts/SimpleCharts";
-import { CHART_BLUE, CHART_CYAN, CHART_TEAL } from "@/lib/frontEnd/ui/chartTheme";
+import { CHART_BLUE, CHART_GREEN, CHART_ORANGE } from "@/lib/frontEnd/ui/chartTheme";
 
 const dashboardChartMocks = getDashboardChartMocks();
 
@@ -25,7 +25,7 @@ function KpiCard({
   label: string;
   value: string;
   sub: string;
-  tone: "blue" | "cyan" | "teal" | "red";
+  tone: "blue" | "green" | "orange" | "red";
 }) {
   return (
     <article className={`kpi-card ${tone}`}>
@@ -62,9 +62,9 @@ export function CurtailmentDashboard({ data }: { data: unknown }) {
           label="Total Curtailment Gap"
           value={`${view.summary.totalGapMWh.toFixed(1)} MWh`}
           sub="Modeled minus actual generation"
-          tone="cyan"
+          tone="orange"
         />
-        <KpiCard label="Average Gap / Hour" value={`${avgGap.toFixed(2)} MWh`} sub="Useful for sizing storage strategy" tone="teal" />
+        <KpiCard label="Average Gap / Hour" value={`${avgGap.toFixed(2)} MWh`} sub="Useful for sizing storage strategy" tone="green" />
       </div>
       <section className="panel">
         <h4>Hourly Curtailment Gap</h4>
@@ -72,11 +72,11 @@ export function CurtailmentDashboard({ data }: { data: unknown }) {
       </section>
       <section className="panel">
         <h4>Monthly Curtailment (mock — `src/lib/Backend/aeso/aeso.mock.charts.ts`)</h4>
-        <SimpleBarChart data={series.monthly} xKey="month" yKey="totalCurtailmentMWh" color={CHART_CYAN} />
+        <SimpleBarChart data={series.monthly} xKey="month" yKey="totalCurtailmentMWh" color={CHART_ORANGE} />
       </section>
       <section className="panel">
         <h4>Hour-of-day wind profile (mock — `scada/scada.mock.charts.ts`)</h4>
-        <SimpleBarChart data={series.scadaHourlyWindMs} xKey="hour" yKey="avgWindMs" color={CHART_TEAL} />
+        <SimpleBarChart data={series.scadaHourlyWindMs} xKey="hour" yKey="avgWindMs" color={CHART_GREEN} />
       </section>
       {"rawDataByRepository" in view && view.rawDataByRepository && (
         <section className="panel">
@@ -102,13 +102,13 @@ export function LoadStorageDashboard({ data }: { data: unknown }) {
   return (
     <>
       <div className="kpi-grid">
-        <KpiCard label="Captured Energy" value={`${view.capturedMWh.toFixed(2)} MWh`} sub="Energy absorbed from curtailed periods" tone="teal" />
+        <KpiCard label="Captured Energy" value={`${view.capturedMWh.toFixed(2)} MWh`} sub="Energy absorbed from curtailed periods" tone="green" />
         <KpiCard label="Released Energy" value={`${view.releasedMWh.toFixed(2)} MWh`} sub="Delivered after storage efficiency losses" tone="blue" />
         <KpiCard
           label="Estimated Gross Revenue"
           value={`$${view.estimatedGrossRevenueCad.toFixed(0)} CAD`}
           sub="Simple price-times-delivered estimate"
-          tone="cyan"
+          tone="orange"
         />
       </div>
       <section className="panel">
@@ -117,7 +117,7 @@ export function LoadStorageDashboard({ data }: { data: unknown }) {
       </section>
       <section className="panel">
         <h4>Battery sweep revenue (mock — `src/lib/Backend/simulation/simulation.mock.charts.ts`)</h4>
-        <SimpleLineChart data={series.sweep} xKey="storageMWh" yKey="estimatedGrossRevenueCad" color={CHART_TEAL} />
+        <SimpleLineChart data={series.sweep} xKey="storageMWh" yKey="estimatedGrossRevenueCad" color={CHART_GREEN} />
       </section>
       <section className="panel">
         <h4>Dispatch state of charge snapshot (mock — same simulation mocks)</h4>
@@ -158,12 +158,12 @@ export function NetworkDashboard({ data }: { data: unknown }) {
     <>
       <div className="kpi-grid">
         <KpiCard label="Distance to Fiber PoP" value={`${view.distanceToPopKm.toFixed(1)} km`} sub="Estimated nearest point of presence" tone="blue" />
-        <KpiCard label="Estimated Latency" value={`${view.estimatedLatencyMs.toFixed(3)} ms`} sub="Using simple 5 us per km assumption" tone="cyan" />
+        <KpiCard label="Estimated Latency" value={`${view.estimatedLatencyMs.toFixed(3)} ms`} sub="Using simple 5 us per km assumption" tone="orange" />
         <KpiCard
           label="Workload Feasibility"
           value={`${view.workloads.inference ? "Inference OK" : "Inference No"}`}
           sub={view.workloads.training ? "Training OK" : "Training No"}
-          tone={view.workloads.inference ? "teal" : "red"}
+          tone={view.workloads.inference ? "green" : "red"}
         />
       </div>
       <section className="panel">
