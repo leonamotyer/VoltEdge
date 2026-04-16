@@ -6,7 +6,6 @@
 | Source | What It Gives Us | Cost |
 |---|---|---|
 | AESO | Alberta pool prices, curtailment, generation data | Free |
-| Site SCADA | Hub-height wind and generation telemetry from the operator or historian | Contract / integration |
 | Canadian Wind Turbine Database | Every turbine in Canada — location, height, capacity | Free |
 
 ---
@@ -48,7 +47,7 @@
 
 ---
 
-## Site SCADA — Operator Telemetry
+## Site SCADA — Operator Telemetry - Need mock data
 
 **What we get (typical):**
 - Time-aligned hub wind, power, availability, and curtailment signals from the plant historian or OEM export.
@@ -62,8 +61,6 @@
 ---
 
 ## Demo Data Strategy
-
-Focus on AESO data and the Canadian Wind Turbine Database for public demo layers. SCADA is represented with **mock hourly series** in code (`src/lib/Backend/scada/`) until a historian or file feed is connected.
 
 Where live data is not yet available — financial parameters, load forecasts, PPA terms, and site connectivity — we use realistic synthetic data. All mocked values are based on current industry benchmarks and are designed to be replaced by operator-provided data as projects progress. Swapping in actual numbers requires no platform changes.
 

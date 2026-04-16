@@ -35,7 +35,18 @@ Open [http://localhost:3000](http://localhost:3000) (Next.js default port).
 
 ## Deployment (Vercel)
 
-Set the project **Framework Preset** to **Next.js**. No SPA `index.html` rewrites are required; routes are real server-resolved paths.
+This repo is **Next.js**, not Vite. Vercel must use the **Next.js** builder (it reads `.next/` for you). Do **not** point Output Directory at `dist/`.
+
+1. **Project → Settings → General**
+   - **Framework Preset:** choose **Next.js** (use **Override** if it still says Vite or “Other”).
+   - **Root Directory:** leave blank unless this app lives in a subfolder of the Git repo.
+2. **Build & Development Settings**
+   - **Build Command:** leave default, or set `npm run build`.
+   - **Output Directory:** leave **empty** (clear any old `dist` value from the Vite days).
+   - **Install Command:** default `npm install` is fine.
+3. Redeploy.
+
+If you still see **“no public output directory”** or similar, the preset or an old **Output Directory** override is almost always the cause—Next does not emit a `dist` folder like Vite did.
 
 ## License
 
