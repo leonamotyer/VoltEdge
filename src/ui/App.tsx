@@ -1,14 +1,72 @@
-import { NavLink } from "react-router-dom";
-import { Outlet } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { sidebarNavItems } from "../lib/frontEnd/components/sidebarNav";
+import { useMediaQuery } from "./hooks/useMediaQuery";
 
 export function AppLayout() {
+  const [navOpen, setNavOpen] = useState(false);
+  const location = useLocation();
+  const isDesktopNav = useMediaQuery("(min-width: 900px)");
+
+  useEffect(() => {
+    setNavOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (isDesktopNav) {
+      setNavOpen(false);
+    }
+  }, [isDesktopNav]);
+
+  useEffect(() => {
+    if (!navOpen) {
+      return;
+    }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setNavOpen(false);
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [navOpen]);
+
   return (
     <main className="app-shell">
-      <aside className="sidebar">
-        <h1>VoltEdge MDC</h1>
-        <p className="sidebar-subtitle">Investor & Partner Edition</p>
-        <nav>
+      <button
+        type="button"
+        className="nav-toggle"
+        aria-expanded={navOpen}
+        aria-controls="app-sidebar"
+        aria-label={navOpen ? "Close menu" : "Open menu"}
+        onClick={() => setNavOpen((o) => !o)}
+      >
+        <span className="nav-toggle-bar" aria-hidden />
+        <span className="nav-toggle-bar" aria-hidden />
+        <span className="nav-toggle-bar" aria-hidden />
+      </button>
+
+      {navOpen ? (
+        <button
+          type="button"
+          className="nav-backdrop"
+          aria-label="Close menu"
+          tabIndex={-1}
+          onClick={() => setNavOpen(false)}
+        />
+      ) : null}
+
+      <aside id="app-sidebar" className={`sidebar${navOpen ? " sidebar--open" : ""}`}>
+        <div className="sidebar-brand">
+          <h1>VoltEdge MDC</h1>
+          <p className="sidebar-subtitle">Investor & Partner Edition</p>
+        </div>
+        <nav aria-label="Primary">
           {sidebarNavItems.map((item) => (
             <NavLink
               key={item.id}
@@ -23,7 +81,7 @@ export function AppLayout() {
 
       <section className="content">
         <header className="ve-header">
-          <h2>VoltEdge MDC - Renewable Curtailment Intelligence</h2>
+          <h2>VoltEdge MDC — Renewable Curtailment Intelligence</h2>
           <p>
             Curtailment analysis, load and storage sizing, and network feasibility in one
             decision view.
