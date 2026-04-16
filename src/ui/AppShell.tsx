@@ -1,16 +1,19 @@
-import { useEffect, useState } from "react";
-import { NavLink, Outlet, useLocation } from "react-router-dom";
-import { sidebarNavItems } from "../lib/frontEnd/components/sidebarNav";
-import { useMediaQuery } from "./hooks/useMediaQuery";
+"use client";
 
-export function AppLayout() {
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { sidebarNavItems } from "@/lib/frontEnd/components/sidebarNav";
+import { useMediaQuery } from "@/ui/hooks/useMediaQuery";
+
+export function AppShell({ children }: { children: React.ReactNode }) {
   const [navOpen, setNavOpen] = useState(false);
-  const location = useLocation();
+  const pathname = usePathname();
   const isDesktopNav = useMediaQuery("(min-width: 900px)");
 
   useEffect(() => {
     setNavOpen(false);
-  }, [location.pathname]);
+  }, [pathname]);
 
   useEffect(() => {
     if (isDesktopNav) {
@@ -67,15 +70,19 @@ export function AppLayout() {
           <p className="sidebar-subtitle">Investor & Partner Edition</p>
         </div>
         <nav aria-label="Primary">
-          {sidebarNavItems.map((item) => (
-            <NavLink
-              key={item.id}
-              className={({ isActive }) => (isActive ? "nav-item active" : "nav-item")}
-              to={item.href}
-            >
-              {item.label}
-            </NavLink>
-          ))}
+          {sidebarNavItems.map((item) => {
+            const active = pathname === item.href;
+            return (
+              <Link
+                key={item.id}
+                href={item.href}
+                className={active ? "nav-item active" : "nav-item"}
+                prefetch
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
       </aside>
 
@@ -83,11 +90,11 @@ export function AppLayout() {
         <header className="ve-header">
           <h2>VoltEdge MDC — Renewable Curtailment Intelligence</h2>
           <p>
-            Curtailment analysis, load and storage sizing, and network feasibility in one
-            decision view.
+            Curtailment analysis, load and storage sizing, and network feasibility in one decision
+            view.
           </p>
         </header>
-        <Outlet />
+        {children}
       </section>
     </main>
   );

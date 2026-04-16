@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Bar,
   BarChart,
@@ -12,7 +14,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { useIsCompactCharts } from "../../hooks/useMediaQuery";
+import { useIsCompactCharts } from "@/ui/hooks/useMediaQuery";
 
 export function SimpleLineChart({
   data,

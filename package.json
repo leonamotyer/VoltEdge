@@ -1,29 +1,25 @@
 {
   "name": "voltedge",
   "private": true,
-  "type": "module",
   "scripts": {
-    "dev": "vite",
-    "start": "vite",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "test": "vitest run",
     "test:watch": "vitest",
-    "build": "tsc -p tsconfig.build.json && vite build",
-    "preview": "vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "next": "^15.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "recharts": "^3.8.1"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^5.2.0",
     "typescript": "^5.8.3",
-    "vite": "^7.3.2",
     "vitest": "^3.1.1"
-  },
-  "dependencies": {
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5",
-    "react-router-dom": "^7.14.1",
-    "recharts": "^3.8.1"
   }
 }
