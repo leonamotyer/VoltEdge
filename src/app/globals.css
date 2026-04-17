@@ -106,27 +106,42 @@ a:focus-visible {
   min-height: 100dvh;
 }
 
+/* Mobile menu control — lives in .ve-header (same bar as title); hidden on desktop. */
 .nav-toggle {
   display: none;
-  position: fixed;
-  top: max(10px, env(safe-area-inset-top, 0px));
-  left: max(10px, env(safe-area-inset-left, 0px));
-  z-index: 90;
+  position: relative;
+  flex-shrink: 0;
   flex-direction: column;
   justify-content: center;
   gap: 5px;
   width: 44px;
   height: 44px;
   padding: 0;
-  border: 1px solid var(--color-border);
-  border-radius: 10px;
-  background: var(--color-bg-surface);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  margin: 0;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nav-toggle:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.nav-toggle:active {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.nav-toggle[aria-expanded="true"] {
+  background: rgba(110, 184, 154, 0.2);
+  border-color: rgba(167, 243, 208, 0.45);
 }
 
 .nav-toggle:focus-visible {
-  outline: 2px solid var(--color-focus-ring);
+  outline: 2px solid rgba(255, 255, 255, 0.85);
   outline-offset: 2px;
 }
 
@@ -135,7 +150,7 @@ a:focus-visible {
   width: 20px;
   height: 2px;
   margin: 0 auto;
-  background: var(--color-brand-dark);
+  background: rgba(248, 250, 252, 0.95);
   border-radius: 1px;
 }
 
@@ -332,6 +347,22 @@ a:focus-visible {
   height: 3px;
   background: linear-gradient(90deg, var(--color-chart-green), var(--color-chart-blue), var(--color-chart-orange));
   opacity: 0.95;
+}
+
+.ve-header-toolbar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 0;
+}
+
+.ve-header-inner {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
 }
 
 .ve-header-row {
@@ -800,6 +831,20 @@ a:focus-visible {
 
   .nav-toggle {
     display: flex;
+    z-index: 95;
+    align-self: flex-start;
+    margin-top: 0.15rem;
+  }
+
+  .ve-header-toolbar {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .ve-header-inner {
+    flex: 1;
+    min-width: 0;
   }
 
   .nav-backdrop {
@@ -834,9 +879,13 @@ a:focus-visible {
   }
 
   .content {
-    --content-pad-top: calc(max(14px, env(safe-area-inset-top, 0px)) + 52px);
+    --content-pad-top: max(12px, env(safe-area-inset-top, 0px));
     --content-pad-right: max(14px, env(safe-area-inset-right, 0px));
     --content-pad-bottom: max(18px, env(safe-area-inset-bottom, 0px));
     --content-pad-left: max(14px, env(safe-area-inset-left, 0px));
+  }
+
+  .ve-header {
+    padding-top: max(0.75rem, env(safe-area-inset-top, 0px));
   }
 }

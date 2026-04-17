@@ -59,18 +59,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <a href="#main-content" className="skip-link">
         Skip to main content
       </a>
-      <button
-        type="button"
-        className="nav-toggle"
-        aria-expanded={navOpen}
-        aria-controls="app-sidebar"
-        aria-label={navOpen ? "Close menu" : "Open menu"}
-        onClick={() => setNavOpen((o) => !o)}
-      >
-        <span className="nav-toggle-bar" aria-hidden />
-        <span className="nav-toggle-bar" aria-hidden />
-        <span className="nav-toggle-bar" aria-hidden />
-      </button>
 
       {navOpen ? (
         <button
@@ -115,19 +103,35 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <section className="content">
         <header className="ve-header">
           <div className="ve-header-glow" aria-hidden="true" />
-          <div className="ve-header-row">
-            <div className="ve-header-lead">
-              <p className="ve-header-eyebrow">Clean energy decision stack</p>
-              <h2>Renewable curtailment intelligence</h2>
+          <div className="ve-header-toolbar">
+            <button
+              type="button"
+              className="nav-toggle"
+              aria-expanded={navOpen}
+              aria-controls="app-sidebar"
+              aria-label={navOpen ? "Close menu" : "Open menu"}
+              onClick={() => setNavOpen((o) => !o)}
+            >
+              <span className="nav-toggle-bar" aria-hidden />
+              <span className="nav-toggle-bar" aria-hidden />
+              <span className="nav-toggle-bar" aria-hidden />
+            </button>
+            <div className="ve-header-inner">
+              <div className="ve-header-row">
+                <div className="ve-header-lead">
+                  <p className="ve-header-eyebrow">Clean energy decision stack</p>
+                  <h2>Renewable curtailment intelligence</h2>
+                </div>
+                <span className="ve-badge" title="All figures use demo repositories until live feeds are wired">
+                  Demo data
+                </span>
+              </div>
+              <p className="ve-header-dek">
+                Curtailment analysis, load and storage sizing, and network feasibility in one live-feel
+                investor view.
+              </p>
             </div>
-            <span className="ve-badge" title="All figures use demo repositories until live feeds are wired">
-              Demo data
-            </span>
           </div>
-          <p className="ve-header-dek">
-            Curtailment analysis, load and storage sizing, and network feasibility in one live-feel
-            investor view.
-          </p>
         </header>
         <div id="main-content" className="content-main" tabIndex={-1}>
           {children}
