@@ -29,6 +29,9 @@ export function buildCurtailmentSeries(data: CurtailmentRouteData, mock: Dashboa
       priceCadPerMWh: row.poolPriceCadPerMWh,
     })),
     monthly: mock.curtailmentMonthly,
+    monthlyProfile: mock.monthlyCurtailmentProfile,
+    avgTrend: mock.curtailmentAvgTrend,
+    eventDuration: mock.curtailmentEventDuration,
     scadaHourlyWindMs: mock.scadaHourlyWindMs,
   };
 }

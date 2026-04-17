@@ -8,6 +8,9 @@ import {
 
 const emptyMocks: DashboardChartMocks = {
   curtailmentMonthly: [],
+  monthlyCurtailmentProfile: [],
+  curtailmentAvgTrend: [],
+  curtailmentEventDuration: [],
   scadaHourlyWindMs: [],
   batterySweep: [],
   dispatchTimeline: [],
@@ -29,6 +32,16 @@ describe("chart models", () => {
       {
         ...emptyMocks,
         curtailmentMonthly: [{ month: "2026-01", totalCurtailmentMWh: 42 }],
+        monthlyCurtailmentProfile: [
+          {
+            month: "2026-01",
+            label: "Jan '26",
+            totalCurtailmentMWh: 100,
+            unusedEnergyMWh: 40,
+          },
+        ],
+        curtailmentAvgTrend: [{ month: "2026-01", label: "Jan '26", avgCurtailmentMWhPerHour: 9 }],
+        curtailmentEventDuration: [{ bucket: "0–2 h", hoursInBucket: 10 }],
       },
     );
 
@@ -38,6 +51,14 @@ describe("chart models", () => {
       priceCadPerMWh: -5,
     });
     expect(result.monthly[0]).toEqual({ month: "2026-01", totalCurtailmentMWh: 42 });
+    expect(result.monthlyProfile[0]).toEqual({
+      month: "2026-01",
+      label: "Jan '26",
+      totalCurtailmentMWh: 100,
+      unusedEnergyMWh: 40,
+    });
+    expect(result.avgTrend[0].avgCurtailmentMWhPerHour).toBe(9);
+    expect(result.eventDuration[0].bucket).toBe("0–2 h");
   });
 
   it("builds load and storage chart series from route data", () => {

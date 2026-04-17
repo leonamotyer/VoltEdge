@@ -5,6 +5,7 @@ import {
   BarChart,
   CartesianGrid,
   Cell,
+  Legend,
   Line,
   LineChart,
   Pie,
@@ -55,6 +56,61 @@ export function SimpleLineChart({
           />
           <Line type="monotone" dataKey={yKey} stroke={color} strokeWidth={2.25} dot={false} />
         </LineChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+/** Grouped bars (e.g. monthly curtailment vs unused energy) — shared category axis. */
+export function SimpleGroupedBarChart({
+  data,
+  xKey,
+  series,
+}: {
+  data: Record<string, string | number>[];
+  xKey: string;
+  series: readonly { dataKey: string; name: string; color: string }[];
+}) {
+  const compact = useIsCompactCharts();
+  const chartHeight = compact ? 220 : 260;
+
+  return (
+    <div className="chart-box">
+      <ResponsiveContainer width="100%" height={chartHeight}>
+        <BarChart data={data} margin={{ left: compact ? 0 : 4, right: compact ? 4 : 8, bottom: compact ? 8 : 4 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke={CHART_GRID} vertical={false} />
+          <XAxis
+            dataKey={xKey}
+            tick={{ fontSize: compact ? 10 : 12 }}
+            angle={compact ? -35 : 0}
+            textAnchor={compact ? "end" : "middle"}
+            height={compact ? 48 : 28}
+            interval={0}
+          />
+          <YAxis tick={{ fontSize: compact ? 10 : 12 }} width={compact ? 40 : 48} />
+          <Tooltip
+            contentStyle={{
+              fontSize: compact ? 12 : 13,
+              borderRadius: 10,
+              border: "1px solid #e2e8f0",
+              boxShadow: "0 4px 14px rgba(15, 23, 42, 0.08)",
+            }}
+          />
+          <Legend
+            wrapperStyle={{ fontSize: compact ? 11 : 12, paddingTop: 8 }}
+            formatter={(value) => <span style={{ color: "#334155" }}>{value}</span>}
+          />
+          {series.map((s) => (
+            <Bar
+              key={s.dataKey}
+              dataKey={s.dataKey}
+              name={s.name}
+              fill={s.color}
+              radius={[4, 4, 0, 0]}
+              maxBarSize={56}
+            />
+          ))}
+        </BarChart>
       </ResponsiveContainer>
     </div>
   );

@@ -1,4 +1,9 @@
-import { getAesoCurtailmentMonthlyMock } from "../aeso/aeso.mock.charts";
+import {
+  getAesoCurtailmentMonthlyMock,
+  getCurtailmentAvgTrendMock,
+  getCurtailmentEventDurationMock,
+  getMonthlyCurtailmentProfileMock,
+} from "../aeso/aeso.mock.charts";
 import { getScadaHourlyWindProfileMock } from "../scada/scada.mock.charts";
 import { getBatterySweepMock, getDispatchTimelineMock } from "../simulation/simulation.mock.charts";
 import type { DashboardChartMocks } from "./types";
@@ -7,6 +12,9 @@ import type { DashboardChartMocks } from "./types";
 export function getDashboardChartMocks(): DashboardChartMocks {
   return {
     curtailmentMonthly: getAesoCurtailmentMonthlyMock(),
+    monthlyCurtailmentProfile: getMonthlyCurtailmentProfileMock(),
+    curtailmentAvgTrend: getCurtailmentAvgTrendMock(),
+    curtailmentEventDuration: getCurtailmentEventDurationMock(),
     scadaHourlyWindMs: getScadaHourlyWindProfileMock(),
     batterySweep: getBatterySweepMock(),
     dispatchTimeline: getDispatchTimelineMock(),
