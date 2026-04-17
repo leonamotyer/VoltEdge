@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { NavIconKey } from "@/app/frontEnd/ui/components/sidebarNav";
 import { sidebarNavItems } from "@/app/frontEnd/ui/components/sidebarNav";
-import { NavIconCurtailment, NavIconNetwork, NavIconStorage } from "@/app/frontEnd/ui/components/NavIcon";
+import { NavIconCurtailment, NavIconNetwork, NavIconRoi, NavIconStorage } from "@/app/frontEnd/ui/components/NavIcon";
 import { useMediaQuery } from "@/app/frontEnd/ui/hooks/useMediaQuery";
 
 function NavIcon({ name, className }: { name: NavIconKey; className?: string }) {
@@ -16,6 +16,8 @@ function NavIcon({ name, className }: { name: NavIconKey; className?: string }) 
       return <NavIconStorage className={className} />;
     case "network-fiber":
       return <NavIconNetwork className={className} />;
+    case "roi":
+      return <NavIconRoi className={className} />;
     default:
       return null;
   }

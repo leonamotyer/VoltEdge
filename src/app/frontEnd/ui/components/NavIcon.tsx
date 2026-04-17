@@ -33,3 +33,18 @@ export function NavIconNetwork({ className }: { className?: string }) {
     </svg>
   );
 }
+
+/** Return / growth — ROI & financials nav. */
+export function NavIconRoi({ className }: { className?: string }) {
+  return (
+    <svg className={className} width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden focusable="false">
+      <path
+        d="M4 18V6M7 18v-4M10 18V9M13 18v-7M16 18v-3M19 18v-9"
+        stroke="currentColor"
+        strokeWidth="1.85"
+        strokeLinecap="round"
+      />
+      <path d="M17 6l3-3M17 3h3v3" stroke="currentColor" strokeWidth="1.85" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
