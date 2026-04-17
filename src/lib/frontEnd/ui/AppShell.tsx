@@ -84,7 +84,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       <aside id="app-sidebar" className={`sidebar${navOpen ? " sidebar--open" : ""}`}>
         <div className="sidebar-brand">
-          <h1>VoltEdge MDC</h1>
+          <div className="sidebar-mark" aria-hidden="true" />
+          <h1>
+            <span className="sidebar-title-strong">VoltEdge</span>
+            <span className="sidebar-title-rest"> MDC</span>
+          </h1>
           <p className="sidebar-subtitle">Investor & Partner Edition</p>
         </div>
         <nav aria-label="Primary">
@@ -110,15 +114,19 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       <section className="content">
         <header className="ve-header">
+          <div className="ve-header-glow" aria-hidden="true" />
           <div className="ve-header-row">
-            <h2>VoltEdge MDC — Renewable Curtailment Intelligence</h2>
+            <div className="ve-header-lead">
+              <p className="ve-header-eyebrow">Clean energy decision stack</p>
+              <h2>Renewable curtailment intelligence</h2>
+            </div>
             <span className="ve-badge" title="All figures use demo repositories until live feeds are wired">
               Demo data
             </span>
           </div>
-          <p>
-            Curtailment analysis, load and storage sizing, and network feasibility in one decision
-            view.
+          <p className="ve-header-dek">
+            Curtailment analysis, load and storage sizing, and network feasibility in one live-feel
+            investor view.
           </p>
         </header>
         <div id="main-content" className="content-main" tabIndex={-1}>

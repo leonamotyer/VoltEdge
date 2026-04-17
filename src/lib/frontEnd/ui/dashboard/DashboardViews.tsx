@@ -21,14 +21,17 @@ function KpiCard({
   value,
   sub,
   tone,
+  featured,
 }: {
   label: string;
   value: string;
   sub: string;
   tone: "blue" | "green" | "orange" | "red";
+  featured?: boolean;
 }) {
+  const cls = ["kpi-card", tone, featured ? "kpi-card--feature" : ""].filter(Boolean).join(" ");
   return (
-    <article className={`kpi-card ${tone}`}>
+    <article className={cls}>
       <p className="kpi-label">{label}</p>
       <p className="kpi-value">{value}</p>
       <p className="kpi-sub">{sub}</p>
@@ -38,11 +41,13 @@ function KpiCard({
 
 function InvalidDataPanel({ routeLabel, data }: { routeLabel: string; data: unknown }) {
   return (
-    <section className="panel">
-      <h4>{routeLabel} data shape mismatch</h4>
-      <p className="error">The loader returned an unexpected payload format.</p>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
-    </section>
+    <div className="energy-dashboard energy-dashboard--solo">
+      <section className="panel panel--data">
+        <h4>{routeLabel} data shape mismatch</h4>
+        <p className="error">The loader returned an unexpected payload format.</p>
+        <pre>{JSON.stringify(data, null, 2)}</pre>
+      </section>
+    </div>
   );
 }
 
@@ -55,9 +60,15 @@ export function CurtailmentDashboard({ data }: { data: unknown }) {
   const series = buildCurtailmentSeries(view, dashboardChartMocks);
 
   return (
-    <>
+    <div className="energy-dashboard">
       <div className="kpi-grid">
-        <KpiCard label="Hours Analyzed" value={`${view.summary.hours}`} sub="Matched market and SCADA rows" tone="blue" />
+        <KpiCard
+          featured
+          label="Hours Analyzed"
+          value={`${view.summary.hours}`}
+          sub="Matched market and SCADA rows"
+          tone="blue"
+        />
         <KpiCard
           label="Total Curtailment Gap"
           value={`${view.summary.totalGapMWh.toFixed(1)} MWh`}
@@ -66,29 +77,31 @@ export function CurtailmentDashboard({ data }: { data: unknown }) {
         />
         <KpiCard label="Average Gap / Hour" value={`${avgGap.toFixed(2)} MWh`} sub="Useful for sizing storage strategy" tone="green" />
       </div>
-      <section className="panel">
-        <h4>Hourly Curtailment Gap</h4>
-        <SimpleLineChart data={series.hourly} xKey="timestamp" yKey="gapMWh" color={CHART_BLUE} />
-      </section>
-      <section className="panel">
-        <h4>Monthly Curtailment (mock — `src/lib/Backend/aeso/aeso.mock.charts.ts`)</h4>
-        <SimpleBarChart data={series.monthly} xKey="month" yKey="totalCurtailmentMWh" color={CHART_ORANGE} />
-      </section>
-      <section className="panel">
-        <h4>Hour-of-day wind profile (mock — `scada/scada.mock.charts.ts`)</h4>
-        <SimpleBarChart data={series.scadaHourlyWindMs} xKey="hour" yKey="avgWindMs" color={CHART_GREEN} />
-      </section>
-      {"rawDataByRepository" in view && view.rawDataByRepository && (
-        <section className="panel">
+      <div className="panel-bento">
+        <section className="panel panel--chart">
+          <h4>Hourly Curtailment Gap</h4>
+          <SimpleLineChart data={series.hourly} xKey="timestamp" yKey="gapMWh" color={CHART_BLUE} />
+        </section>
+        <section className="panel panel--chart">
+          <h4>Monthly Curtailment (mock — `src/lib/Backend/aeso/aeso.mock.charts.ts`)</h4>
+          <SimpleBarChart data={series.monthly} xKey="month" yKey="totalCurtailmentMWh" color={CHART_ORANGE} />
+        </section>
+        <section className="panel panel--chart">
+          <h4>Hour-of-day wind profile (mock — `scada/scada.mock.charts.ts`)</h4>
+          <SimpleBarChart data={series.scadaHourlyWindMs} xKey="hour" yKey="avgWindMs" color={CHART_GREEN} />
+        </section>
+      </div>
+      {"rawDataByRepository" in view && view.rawDataByRepository ? (
+        <section className="panel panel--data">
           <h4>Raw inputs by repository (`aeso/`, `turbine/`, `scada/`)</h4>
           <pre>{JSON.stringify(view.rawDataByRepository, null, 2)}</pre>
         </section>
-      )}
-      <section className="panel">
+      ) : null}
+      <section className="panel panel--data">
         <h4>Computed scenario</h4>
         <pre>{JSON.stringify({ rows: view.rows, summary: view.summary }, null, 2)}</pre>
       </section>
-    </>
+    </div>
   );
 }
 
@@ -100,9 +113,15 @@ export function LoadStorageDashboard({ data }: { data: unknown }) {
   const series = buildLoadStorageSeries(view, dashboardChartMocks);
 
   return (
-    <>
+    <div className="energy-dashboard">
       <div className="kpi-grid">
-        <KpiCard label="Captured Energy" value={`${view.capturedMWh.toFixed(2)} MWh`} sub="Energy absorbed from curtailed periods" tone="green" />
+        <KpiCard
+          featured
+          label="Captured Energy"
+          value={`${view.capturedMWh.toFixed(2)} MWh`}
+          sub="Energy absorbed from curtailed periods"
+          tone="green"
+        />
         <KpiCard label="Released Energy" value={`${view.releasedMWh.toFixed(2)} MWh`} sub="Delivered after storage efficiency losses" tone="blue" />
         <KpiCard
           label="Estimated Gross Revenue"
@@ -111,25 +130,27 @@ export function LoadStorageDashboard({ data }: { data: unknown }) {
           tone="orange"
         />
       </div>
-      <section className="panel">
-        <h4>Energy Mix</h4>
-        <SimplePieChart data={series.energyMix} />
-      </section>
-      <section className="panel">
-        <h4>Battery sweep revenue (mock — `src/lib/Backend/simulation/simulation.mock.charts.ts`)</h4>
-        <SimpleLineChart data={series.sweep} xKey="storageMWh" yKey="estimatedGrossRevenueCad" color={CHART_GREEN} />
-      </section>
-      <section className="panel">
-        <h4>Dispatch state of charge snapshot (mock — same simulation mocks)</h4>
-        <SimpleLineChart data={series.dispatchTimeline} xKey="timestamp" yKey="stateOfChargeMWh" color={CHART_BLUE} />
-      </section>
-      {"rawDataByRepository" in view && view.rawDataByRepository && (
-        <section className="panel">
+      <div className="panel-bento">
+        <section className="panel panel--chart">
+          <h4>Energy Mix</h4>
+          <SimplePieChart data={series.energyMix} />
+        </section>
+        <section className="panel panel--chart">
+          <h4>Battery sweep revenue (mock — `src/lib/Backend/simulation/simulation.mock.charts.ts`)</h4>
+          <SimpleLineChart data={series.sweep} xKey="storageMWh" yKey="estimatedGrossRevenueCad" color={CHART_GREEN} />
+        </section>
+        <section className="panel panel--chart">
+          <h4>Dispatch state of charge snapshot (mock — same simulation mocks)</h4>
+          <SimpleLineChart data={series.dispatchTimeline} xKey="timestamp" yKey="stateOfChargeMWh" color={CHART_BLUE} />
+        </section>
+      </div>
+      {"rawDataByRepository" in view && view.rawDataByRepository ? (
+        <section className="panel panel--data">
           <h4>Raw inputs by repository (`aeso/`, `turbine/`, `scada/`)</h4>
           <pre>{JSON.stringify(view.rawDataByRepository, null, 2)}</pre>
         </section>
-      )}
-      <section className="panel">
+      ) : null}
+      <section className="panel panel--data">
         <h4>Computed scenario</h4>
         <pre>
           {JSON.stringify(
@@ -143,7 +164,7 @@ export function LoadStorageDashboard({ data }: { data: unknown }) {
           )}
         </pre>
       </section>
-    </>
+    </div>
   );
 }
 
@@ -155,9 +176,15 @@ export function NetworkDashboard({ data }: { data: unknown }) {
   const series = buildNetworkSeries(view);
 
   return (
-    <>
+    <div className="energy-dashboard">
       <div className="kpi-grid">
-        <KpiCard label="Distance to Fiber PoP" value={`${view.distanceToPopKm.toFixed(1)} km`} sub="Estimated nearest point of presence" tone="blue" />
+        <KpiCard
+          featured
+          label="Distance to Fiber PoP"
+          value={`${view.distanceToPopKm.toFixed(1)} km`}
+          sub="Estimated nearest point of presence"
+          tone="blue"
+        />
         <KpiCard label="Estimated Latency" value={`${view.estimatedLatencyMs.toFixed(3)} ms`} sub="Using simple 5 us per km assumption" tone="orange" />
         <KpiCard
           label="Workload Feasibility"
@@ -166,17 +193,19 @@ export function NetworkDashboard({ data }: { data: unknown }) {
           tone={view.workloads.inference ? "green" : "red"}
         />
       </div>
-      <section className="panel">
-        <h4>Latency vs Thresholds</h4>
-        <SimpleBarChart data={series.thresholds} xKey="name" yKey="latencyMs" color={CHART_BLUE} />
-      </section>
-      {"rawDataByRepository" in view && view.rawDataByRepository && (
-        <section className="panel">
+      <div className="panel-bento">
+        <section className="panel panel--chart">
+          <h4>Latency vs Thresholds</h4>
+          <SimpleBarChart data={series.thresholds} xKey="name" yKey="latencyMs" color={CHART_BLUE} />
+        </section>
+      </div>
+      {"rawDataByRepository" in view && view.rawDataByRepository ? (
+        <section className="panel panel--data">
           <h4>Raw inputs by repository (`aeso/`, `turbine/`, `scada/`)</h4>
           <pre>{JSON.stringify(view.rawDataByRepository, null, 2)}</pre>
         </section>
-      )}
-      <section className="panel">
+      ) : null}
+      <section className="panel panel--data">
         <h4>Computed scenario</h4>
         <pre>
           {JSON.stringify(
@@ -190,6 +219,6 @@ export function NetworkDashboard({ data }: { data: unknown }) {
           )}
         </pre>
       </section>
-    </>
+    </div>
   );
 }

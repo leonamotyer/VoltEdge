@@ -1,11 +1,17 @@
 import type { Metadata, Viewport } from "next";
-import { DM_Sans, JetBrains_Mono } from "next/font/google";
+import { DM_Sans, JetBrains_Mono, Outfit } from "next/font/google";
 import { AppShell } from "@/lib/frontEnd/ui/AppShell";
 import "./globals.css";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap",
+});
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  variable: "--font-display",
   display: "swap",
 });
 
@@ -28,7 +34,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${dmSans.variable} ${jetMono.variable}`}>
+    <html lang="en" className={`${dmSans.variable} ${outfit.variable} ${jetMono.variable}`}>
       <body>
         <AppShell>{children}</AppShell>
       </body>
