@@ -1,85 +1,65 @@
 "use client";
 
-import { getDashboardChartMocks } from "@/lib/Backend/dashboardMocks";
-import { isLoadAndStorageData } from "@/app/frontEnd/dashboard/guards";
-import { buildLoadStorageSeries } from "@/app/frontEnd/transforms/chartModels";
-import { InvalidDataPanel } from "@/app/frontEnd/ui/components/InvalidDataPanel";
 import { KpiCard } from "@/app/frontEnd/ui/components/KpiCard";
 import { SimpleLineChart, SimplePieChart } from "@/app/frontEnd/ui/components/charts/SimpleCharts";
 import { CHART_BLUE, CHART_GREEN } from "@/app/frontEnd/ui/chartTheme";
-import { loadLoadAndStoragePageData } from "./data";
 
-const dashboardChartMocks = getDashboardChartMocks();
+/** Small static demo — replace with real loaders when you wire the backend. */
+const kpis = {
+  capturedMWh: 12_400,
+  releasedMWh: 9_800,
+  revenueCad: 412_000,
+};
+
+const energyMix = [
+  { name: "Curtailed wind", value: 42_000 },
+  { name: "Battery", value: 9_800 },
+  { name: "Grid", value: 3_100 },
+];
+
+const batterySweep = [0, 2, 4, 6, 8, 10, 12, 15].map((storageMWh, i) => ({
+  storageMWh,
+  estimatedGrossRevenueCad: 180_000 + i * 28_000 + storageMWh * 12_000,
+}));
+
+const socSample = Array.from({ length: 36 }, (_, i) => ({
+  hour: `${i % 24}h`,
+  stateOfChargeMWh: 2.8 + 2.2 * Math.sin(i / 5),
+}));
 
 export default function LoadAndStoragePage() {
-  const data = loadLoadAndStoragePageData();
-
-  if (!isLoadAndStorageData(data)) {
-    return (
-      <>
-        <h3 className="section-header">Load and Storage</h3>
-        <InvalidDataPanel routeLabel="Load and Storage" data={data} />
-      </>
-    );
-  }
-
-  const view = data;
-  const series = buildLoadStorageSeries(view, dashboardChartMocks);
-
   return (
     <>
       <h3 className="section-header">Load and Storage</h3>
+      <p className="panel-subtle" style={{ marginTop: "-0.35rem", marginBottom: "1rem" }}>
+        Demo layout: battery + curtailed supply story. Hook your own data into this page when ready.
+      </p>
       <div className="energy-dashboard">
         <div className="kpi-grid">
           <KpiCard
             featured
-            label="Captured Energy"
-            value={`${view.capturedMWh.toFixed(2)} MWh`}
-            sub="Energy absorbed from curtailed periods"
+            label="Captured (demo)"
+            value={`${kpis.capturedMWh.toLocaleString()} MWh`}
+            sub="From curtailed periods"
             tone="green"
           />
-          <KpiCard label="Released Energy" value={`${view.releasedMWh.toFixed(2)} MWh`} sub="Delivered after storage efficiency losses" tone="blue" />
-          <KpiCard
-            label="Estimated Gross Revenue"
-            value={`$${view.estimatedGrossRevenueCad.toFixed(0)} CAD`}
-            sub="Simple price-times-delivered estimate"
-            tone="orange"
-          />
+          <KpiCard label="Released (demo)" value={`${kpis.releasedMWh.toLocaleString()} MWh`} sub="After round-trip losses" tone="blue" />
+          <KpiCard label="Gross revenue (demo)" value={`$${kpis.revenueCad.toLocaleString()} CAD`} sub="Illustrative" tone="orange" />
         </div>
         <div className="panel-bento">
           <section className="panel panel--chart">
-            <h4>Energy Mix</h4>
-            <SimplePieChart data={series.energyMix} />
+            <h4>Energy mix</h4>
+            <SimplePieChart data={energyMix} />
           </section>
           <section className="panel panel--chart">
-            <h4>Battery sweep revenue (mock — `src/lib/Backend/simulation/simulation.mock.charts.ts`)</h4>
-            <SimpleLineChart data={series.sweep} xKey="storageMWh" yKey="estimatedGrossRevenueCad" color={CHART_GREEN} />
+            <h4>Battery size vs revenue (demo)</h4>
+            <SimpleLineChart data={batterySweep} xKey="storageMWh" yKey="estimatedGrossRevenueCad" color={CHART_GREEN} />
           </section>
           <section className="panel panel--chart">
-            <h4>Dispatch state of charge snapshot (mock — same simulation mocks)</h4>
-            <SimpleLineChart data={series.dispatchTimeline} xKey="timestamp" yKey="stateOfChargeMWh" color={CHART_BLUE} />
+            <h4>State of charge sample (demo)</h4>
+            <SimpleLineChart data={socSample} xKey="hour" yKey="stateOfChargeMWh" color={CHART_BLUE} />
           </section>
         </div>
-        {"rawDataByRepository" in view && view.rawDataByRepository ? (
-          <section className="panel panel--data">
-            <h4>Raw inputs by repository (`aeso/`, `turbine/`, `scada/`)</h4>
-            <pre>{JSON.stringify(view.rawDataByRepository, null, 2)}</pre>
-          </section>
-        ) : null}
-        <section className="panel panel--data">
-          <h4>Computed scenario</h4>
-          <pre>
-            {JSON.stringify(
-              {
-                capturedMWh: view.capturedMWh,
-                releasedMWh: view.releasedMWh,
-                estimatedGrossRevenueCad: view.estimatedGrossRevenueCad,
-              },
-              null,
-              2,
-            )}
-          </pre>
-        </section>
       </div>
     </>
   );

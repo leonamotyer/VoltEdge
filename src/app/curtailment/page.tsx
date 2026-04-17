@@ -2,7 +2,7 @@
 
 import { getDashboardChartMocks } from "@/lib/Backend/dashboardMocks";
 import { isCurtailmentData } from "@/app/frontEnd/dashboard/guards";
-import { buildCurtailmentSeries } from "@/app/frontEnd/transforms/chartModels";
+import { buildCurtailmentSeries } from "@/lib/Backend/transforms/chartModels";
 import { InvalidDataPanel } from "@/app/frontEnd/ui/components/InvalidDataPanel";
 import { KpiCard } from "@/app/frontEnd/ui/components/KpiCard";
 import {

@@ -1,5 +1,5 @@
-import type { AesoHourlyMarketRecord } from "../../../lib/Backend/aeso/aesoRepository";
-import type { ScadaHourlyRecord } from "../../../lib/Backend/scada/scadaRepository";
+import type { AesoHourlyMarketRecord } from "../aeso/aesoRepository";
+import type { ScadaHourlyRecord } from "../scada/scadaRepository";
 
 export type CurtailmentSiteRequest = {
   latitude: number;

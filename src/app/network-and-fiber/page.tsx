@@ -1,7 +1,7 @@
 "use client";
 
 import { isNetworkData } from "@/app/frontEnd/dashboard/guards";
-import { buildNetworkSeries } from "@/app/frontEnd/transforms/chartModels";
+import { buildNetworkSeries } from "@/lib/Backend/transforms/chartModels";
 import { InvalidDataPanel } from "@/app/frontEnd/ui/components/InvalidDataPanel";
 import { KpiCard } from "@/app/frontEnd/ui/components/KpiCard";
 import { SimpleBarChart } from "@/app/frontEnd/ui/components/charts/SimpleCharts";
