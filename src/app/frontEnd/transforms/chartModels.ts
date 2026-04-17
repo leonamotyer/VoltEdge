@@ -1,4 +1,4 @@
-import type { DashboardChartMocks } from "../../Backend/dashboardMocks/types";
+import type { DashboardChartMocks } from "../../../lib/Backend/dashboardMocks/types";
 
 type CurtailmentRouteData = {
   rows: Array<{
