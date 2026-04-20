@@ -1,3 +1,5 @@
+import type { IAesoRepository } from "../repositories/interfaces";
+
 /** One hourly AESO-style market row (pool price + metered or aggregate generation). */
 export interface AesoHourlyMarketRecord {
   timestamp: string;
@@ -5,7 +7,7 @@ export interface AesoHourlyMarketRecord {
   actualGenerationMWh: number;
 }
 
-export class AesoRepository {
+export class AesoRepository implements IAesoRepository {
   getDemoHourlyMarket(): AesoHourlyMarketRecord[] {
     return [
       { timestamp: "2026-01-01T00:00:00Z", poolPriceCadPerMWh: -5, actualGenerationMWh: 40 },

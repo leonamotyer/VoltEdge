@@ -1,3 +1,5 @@
+import type { IScadaRepository } from "../repositories/interfaces";
+
 /** One aligned SCADA / site telemetry row (demo shape — expand with power, yaw, etc. when wired). */
 export interface ScadaHourlyRecord {
   timestamp: string;
@@ -5,7 +7,7 @@ export interface ScadaHourlyRecord {
   windSpeedMs: number;
 }
 
-export class ScadaRepository {
+export class ScadaRepository implements IScadaRepository {
   /** Demo SCADA met series aligned to AESO demo timestamps. */
   getDemoHourlyScada(): ScadaHourlyRecord[] {
     return [
