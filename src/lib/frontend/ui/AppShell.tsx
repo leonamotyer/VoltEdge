@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import type { NavIconKey } from "@/app/frontEnd/ui/components/sidebarNav";
-import { sidebarNavItems } from "@/app/frontEnd/ui/components/sidebarNav";
-import { NavIconCurtailment, NavIconNetwork, NavIconRoi, NavIconStorage } from "@/app/frontEnd/ui/components/NavIcon";
-import { useMediaQuery } from "@/app/frontEnd/ui/hooks/useMediaQuery";
+import type { NavIconKey } from "@/lib/frontend/ui/components/sidebarNav";
+import { sidebarNavItems } from "@/lib/frontend/ui/components/sidebarNav";
+import { NavIconCurtailment, NavIconNetwork, NavIconRoi, NavIconStorage } from "@/lib/frontend/ui/components/NavIcon";
+import { useMediaQuery } from "@/lib/frontend/ui/hooks/useMediaQuery";
 
 function NavIcon({ name, className }: { name: NavIconKey; className?: string }) {
   switch (name) {

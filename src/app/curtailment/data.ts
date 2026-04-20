@@ -1,8 +1,8 @@
-import { aesoRepository } from "@/app/Backend/aeso/aesoRepository";
-import { scadaRepository } from "@/app/Backend/scada/scadaRepository";
-import { turbineRepository } from "@/app/Backend/turbine/turbineRepository";
-import { demoCurtailmentWindow, DEMO_SITE_ID } from "@/app/frontEnd/demoSite";
-import { buildCurtailmentView } from "@/app/Backend/derived/siteAnalytics";
+import { aesoRepository } from "@/lib/backend/aeso/aesoRepository";
+import { scadaRepository } from "@/lib/backend/scada/scadaRepository";
+import { turbineRepository } from "@/lib/backend/turbine/turbineRepository";
+import { demoCurtailmentWindow, DEMO_SITE_ID } from "@/lib/frontend/demoSite";
+import { buildCurtailmentView } from "@/lib/backend/derived/siteAnalytics";
 
 export function loadCurtailmentPageData() {
   const turbineCount = turbineRepository.getCountForSite(DEMO_SITE_ID);

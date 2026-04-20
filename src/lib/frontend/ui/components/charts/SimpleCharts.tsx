@@ -15,8 +15,8 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { useIsCompactCharts } from "@/app/frontEnd/ui/hooks/useMediaQuery";
-import { CHART_GRID, CHART_PIE_COLORS } from "@/app/frontEnd/ui/chartTheme";
+import { useIsCompactCharts } from "@/lib/frontend/ui/hooks/useMediaQuery";
+import { CHART_GRID, CHART_PIE_COLORS } from "@/lib/frontend/ui/chartTheme";
 
 export function SimpleLineChart({
   data,

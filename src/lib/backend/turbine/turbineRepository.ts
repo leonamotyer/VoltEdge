@@ -1,3 +1,5 @@
+import type { ITurbineRepository } from "../repositories/interfaces";
+
 /** One row from the Canadian Wind Turbine Database (or operator feed mapped to the same shape). */
 export interface TurbineRecord {
   siteId: string;
@@ -13,7 +15,7 @@ export interface TurbineRecord {
 
 const DEMO_SITE_ID = "ab-wind-1";
 
-export class TurbineRepository {
+export class TurbineRepository implements ITurbineRepository {
   getDemoRecords(): TurbineRecord[] {
     const rows: TurbineRecord[] = [];
     for (let i = 1; i <= 10; i += 1) {

@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { DM_Sans, JetBrains_Mono, Outfit } from "next/font/google";
-import { AppShell } from "@/app/frontEnd/ui/AppShell";
+import { AppShell } from "@/lib/frontend/ui/AppShell";
 import "./globals.css";
 
 const dmSans = DM_Sans({

@@ -28,9 +28,9 @@ Open [http://localhost:3000](http://localhost:3000) (Next.js default port).
 
 ## Project layout
 
-- `src/app/` — Next.js App Router: `layout.tsx`, routes, `globals.css`
-- `src/lib/Backend/` — data layer only: repositories (`aeso/`, `scada/`, `turbine/`), domain mocks (`*.mock.charts.ts`), `simulation/` sizing mocks, `dashboardMocks/` (composed chart payloads + types)
-- `src/lib/frontEnd/` — UI and app logic: `ui/` (shell, charts, dashboard views, hooks), route loaders (`curtailment/`, `load-and-storage/`, `network-and-fiber/`), `demoSite.ts`, `derived/`, `transforms/`, `dashboard/guards.ts`
+- `src/app/` — Next.js App Router routes only: `layout.tsx`, `page.tsx`, route pages (`curtailment/`, `load-and-storage/`, `network-and-fiber/`, `roi/`), `globals.css`
+- `src/lib/backend/` — Data layer: repositories (`aeso/`, `scada/`, `turbine/`), analytics (`derived/siteAnalytics`), data transforms (`transforms/chartModels`), mocks (`dashboardMocks/`, `*.mock.charts.ts`)
+- `src/lib/frontend/` — UI components and logic: `ui/` (AppShell, charts, components, hooks), type guards (`dashboard/guards`), theme constants (`ui/chartTheme`), demo data (`demoSite.ts`)
 
 ## Deployment (Vercel)
 

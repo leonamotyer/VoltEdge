@@ -1,8 +1,8 @@
-import { aesoRepository } from "@/app/Backend/aeso/aesoRepository";
-import { scadaRepository } from "@/app/Backend/scada/scadaRepository";
-import { turbineRepository } from "@/app/Backend/turbine/turbineRepository";
-import { DEMO_SITE_ID } from "@/app/frontEnd/demoSite";
-import { evaluateNetworkFiber, type NetworkFiberRequest } from "@/app/Backend/derived/siteAnalytics";
+import { aesoRepository } from "@/lib/backend/aeso/aesoRepository";
+import { scadaRepository } from "@/lib/backend/scada/scadaRepository";
+import { turbineRepository } from "@/lib/backend/turbine/turbineRepository";
+import { DEMO_SITE_ID } from "@/lib/frontend/demoSite";
+import { evaluateNetworkFiber, type NetworkFiberRequest } from "@/lib/backend/derived/siteAnalytics";
 
 const DEMO_DISTANCE_TO_FIBER_POP_KM = 120;
 
