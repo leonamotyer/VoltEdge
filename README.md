@@ -17,6 +17,8 @@ Open [http://localhost:3000](http://localhost:3000) (Next.js default port).
 
 ## Scripts
 
+### Frontend (Next.js)
+
 | Command | Description |
 | -------- | ----------- |
 | `npm run dev` | Next.js dev server with hot reload |
@@ -26,11 +28,55 @@ Open [http://localhost:3000](http://localhost:3000) (Next.js default port).
 | `npm run test:watch` | Vitest watch mode |
 | `npm run typecheck` | TypeScript check (`tsc --noEmit`) |
 
-## Project layout
+### Backend (Python)
 
-- `src/app/` — Next.js App Router routes only: `layout.tsx`, `page.tsx`, route pages (`curtailment/`, `load-and-storage/`, `network-and-fiber/`, `roi/`), `globals.css`
-- `src/lib/backend/` — Data layer: repositories (`aeso/`, `scada/`, `turbine/`), analytics (`derived/siteAnalytics`), data transforms (`transforms/chartModels`), mocks (`dashboardMocks/`, `*.mock.charts.ts`)
-- `src/lib/frontend/` — UI components and logic: `ui/` (AppShell, charts, components, hooks), type guards (`dashboard/guards`), theme constants (`ui/chartTheme`), demo data (`demoSite.ts`)
+```bash
+# From src/backend/ directory
+pip install -r requirements.txt
+uvicorn src.main:app --reload --port 8000
+```
+
+API documentation available at:
+- Swagger UI: http://localhost:8000/docs
+- ReDoc: http://localhost:8000/redoc
+
+See [src/backend/README.md](./src/backend/README.md) for full backend documentation.
+
+## Project Structure
+
+```
+voltEdge/
+├── src/
+│   ├── app/              # Next.js App Router (routes only)
+│   │   ├── curtailment/
+│   │   ├── load-and-storage/
+│   │   ├── network-and-fiber/
+│   │   ├── roi/
+│   │   ├── layout.tsx
+│   │   └── globals.css
+│   │
+│   ├── backend/          # Python FastAPI backend
+│   │   ├── src/
+│   │   │   ├── main.py           # API entry point
+│   │   │   ├── api/              # REST endpoints
+│   │   │   ├── repositories/     # Data sources (AESO, SCADA, Turbine)
+│   │   │   ├── analytics/        # Business logic & analytics
+│   │   │   ├── models/           # Pydantic request/response schemas
+│   │   │   └── mocks/            # Mock data generation
+│   │   ├── data/                 # Static JSON data files
+│   │   ├── tests/                # Pytest tests
+│   │   └── requirements.txt      # Python dependencies
+│   │
+│   └── frontend/         # TypeScript UI layer
+│       ├── components/   # Layout components (DashboardLayout, KpiGrid, etc.)
+│       ├── ui/          # AppShell, charts, KPI cards, hooks
+│       └── dashboard/   # Type guards & validation
+│
+├── ARCHITECTURE.md       # Architecture documentation
+└── package.json         # Node.js dependencies
+```
+
+See [ARCHITECTURE.md](./ARCHITECTURE.md) for detailed architectural patterns and design principles.
 
 ## Deployment (Vercel)
 
