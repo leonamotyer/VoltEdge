@@ -1,11 +1,11 @@
 "use client";
 
-import { DashboardLayout } from "@/lib/frontend/components/DashboardLayout";
-import { KpiGrid } from "@/lib/frontend/components/KpiGrid";
-import { PanelBento } from "@/lib/frontend/components/PanelBento";
-import { KpiCard } from "@/lib/frontend/ui/components/KpiCard";
-import { SimpleBarChart, SimpleLineChart, SimplePieChart } from "@/lib/frontend/ui/components/charts/SimpleCharts";
-import { CHART_BLUE, CHART_GREEN } from "@/lib/frontend/ui/chartTheme";
+import { DashboardLayout } from "@/frontend/components/DashboardLayout";
+import { KpiGrid } from "@/frontend/components/KpiGrid";
+import { PanelBento } from "@/frontend/components/PanelBento";
+import { KpiCard } from "@/frontend/ui/components/KpiCard";
+import { SimpleBarChart, SimpleLineChart, SimplePieChart } from "@/frontend/ui/components/charts/SimpleCharts";
+import { CHART_BLUE, CHART_GREEN } from "@/frontend/ui/chartTheme";
 
 /** Placeholder figures — swap for model output when the economics API exists. */
 const kpis = {
