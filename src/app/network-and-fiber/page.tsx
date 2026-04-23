@@ -1,14 +1,13 @@
 "use client";
 
-import { isNetworkData } from "@/lib/frontend/dashboard/guards";
-import { buildNetworkSeries } from "@/lib/backend/transforms/chartModels";
-import { DataBoundPage } from "@/lib/frontend/components/DataBoundPage";
-import { DashboardLayout } from "@/lib/frontend/components/DashboardLayout";
-import { KpiGrid } from "@/lib/frontend/components/KpiGrid";
-import { PanelBento } from "@/lib/frontend/components/PanelBento";
-import { KpiCard } from "@/lib/frontend/ui/components/KpiCard";
-import { SimpleBarChart } from "@/lib/frontend/ui/components/charts/SimpleCharts";
-import { CHART_BLUE } from "@/lib/frontend/ui/chartTheme";
+import { isNetworkData } from "@/frontend/dashboard/guards";
+import { DataBoundPage } from "@/frontend/components/DataBoundPage";
+import { DashboardLayout } from "@/frontend/components/DashboardLayout";
+import { KpiGrid } from "@/frontend/components/KpiGrid";
+import { PanelBento } from "@/frontend/components/PanelBento";
+import { KpiCard } from "@/frontend/ui/components/KpiCard";
+import { SimpleBarChart } from "@/frontend/ui/components/charts/SimpleCharts";
+import { CHART_BLUE } from "@/frontend/ui/chartTheme";
 import { loadNetworkAndFiberPageData } from "./data";
 
 export default function NetworkAndFiberPage() {
@@ -19,7 +18,12 @@ export default function NetworkAndFiberPage() {
       routeLabel="Network and Fiber Feasibility"
     >
       {(data) => {
-        const series = buildNetworkSeries(data);
+        // Build threshold comparison data
+        const thresholdData = [
+          { name: "Estimated", latencyMs: data.estimatedLatencyMs },
+          { name: "Inference Max", latencyMs: 20 },
+          { name: "Training Max", latencyMs: 150 },
+        ];
 
         return (
           <DashboardLayout title="Network and Fiber Feasibility">
@@ -47,7 +51,7 @@ export default function NetworkAndFiberPage() {
             <PanelBento>
               <section className="panel panel--chart">
                 <h4>Latency vs Thresholds</h4>
-                <SimpleBarChart data={series.thresholds} xKey="name" yKey="latencyMs" color={CHART_BLUE} />
+                <SimpleBarChart data={thresholdData} xKey="name" yKey="latencyMs" color={CHART_BLUE} />
               </section>
             </PanelBento>
             {"rawDataByRepository" in data && data.rawDataByRepository ? (

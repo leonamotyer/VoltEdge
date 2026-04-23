@@ -1,0 +1,16 @@
+# FastAPI framework and server
+fastapi==0.110.0
+uvicorn[standard]==0.29.0
+pydantic==2.6.0
+
+# Data processing
+pandas==2.2.0
+python-dateutil==2.9.0
+
+# Development dependencies
+pytest==8.0.0
+pytest-asyncio==0.23.0
+pytest-cov==4.1.0
+
+# Type checking (optional but recommended)
+mypy==1.8.0
