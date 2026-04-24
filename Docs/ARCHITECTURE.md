@@ -10,11 +10,17 @@ voltEdge is a Next.js 15 dashboard for wind energy analytics, built with strict 
 src/
 ├── app/                      # Next.js App Router (routes only)
 │   ├── curtailment/         # Curtailment intelligence page
-│   │   ├── page.tsx        # Route component
+│   │   ├── page.tsx        # Route component (thin wrapper)
 │   │   └── data.ts         # Data loader
 │   ├── load-and-storage/   # Battery sizing page
+│   │   ├── page.tsx        # Route component (thin wrapper)
+│   │   └── data.ts         # Data loader
 │   ├── network-and-fiber/  # Network latency page
+│   │   ├── page.tsx        # Route component (thin wrapper)
+│   │   └── data.ts         # Data loader
 │   ├── roi/                # ROI analysis page
+│   │   ├── page.tsx        # Route component (thin wrapper)
+│   │   └── data.ts         # Data loader
 │   ├── layout.tsx          # Root layout
 │   └── globals.css         # Global styles
 │
@@ -47,15 +53,46 @@ src/
 │   └── requirements.txt    # Python dependencies
 │
 └── frontend/               # TypeScript UI layer
+    ├── battery/            # Battery configuration
+    │   ├── BatteryConfigForm.tsx
+    │   └── types.ts
+    ├── gpu/                # GPU configuration
+    │   ├── GpuConfigForm.tsx
+    │   ├── GpuCharts.tsx
+    │   └── types.ts
+    ├── grid/               # Grid supply configuration
+    │   ├── GridSupplyConfigForm.tsx
+    │   └── types.ts
     ├── components/         # Layout components
     │   ├── DashboardLayout.tsx
     │   ├── DataBoundPage.tsx
     │   ├── KpiGrid.tsx
     │   └── PanelBento.tsx
+    ├── context/            # React Context providers
+    │   └── ConfigContext.tsx
+    ├── sections/           # Page-specific chart sections
+    │   ├── curtailment/   # Curtailment page sections
+    │   │   ├── HourlyCurtailmentGapChart.tsx
+    │   │   ├── MonthlyCurtailmentProfileChart.tsx
+    │   │   ├── AvgCurtailmentTrendChart.tsx
+    │   │   ├── EventDurationChart.tsx
+    │   │   └── HourlyWindProfileChart.tsx
+    │   ├── load-storage/  # Load and storage page sections
+    │   │   ├── GpuRevenueSection.tsx
+    │   │   ├── BatteryStorageKpis.tsx
+    │   │   ├── BatteryStateOfChargeChart.tsx
+    │   │   ├── ChargeDischargePriceChart.tsx
+    │   │   └── EnergySourceMixChart.tsx
+    │   ├── network/       # Network page sections
+    │   │   └── LatencyThresholdChart.tsx
+    │   └── roi/           # ROI page sections
+    │       ├── CapexBreakdownChart.tsx
+    │       ├── CumulativeCashChart.tsx
+    │       └── AnnualPnLChart.tsx
     ├── ui/                 # UI components
     │   ├── AppShell.tsx
     │   ├── chartTheme.ts
-    │   ├── components/     # Primitives (KpiCard, charts, etc.)
+    │   ├── components/     # Primitives (KpiCard, KpiTable, SweepTable, charts)
     │   └── hooks/          # React hooks
     ├── dashboard/          # Type guards & validation
     │   └── guards.ts
@@ -65,10 +102,11 @@ src/
 ## Core Principles
 
 ### 1. **Strict Separation of Concerns**
-- `app/` contains **only** Next.js routes and page components
+- `app/` contains **only** Next.js routes and page components (thin wrappers)
 - `backend/` (Python) contains **all** data access and business logic
 - `frontend/` (TypeScript) contains **all** UI components and utilities
-- No business logic in route files
+- `frontend/sections/` contains **page-specific chart sections** organized by route
+- No business logic in route files - pages orchestrate data and compose sections
 
 ### Architecture Layers
 - **Frontend (Next.js)**: Server-side rendered React pages
@@ -100,33 +138,51 @@ export async function loadCurtailmentData() {
 
 **Benefits**: Testable, swappable implementations, clear separation between Python backend and Next.js frontend
 
-### 3. **Layout Component Composition**
-Pages compose from atomic layout components:
+### 3. **Modular Section Architecture**
+Pages are thin wrappers that compose from modular section components organized by route:
 
 ```typescript
-export default function DashboardPage() {
+// app/roi/page.tsx - Thin wrapper page
+export default function RoiPage() {
   return (
-    <DataBoundPage loader={loadData} guard={isValidData} routeLabel="Dashboard">
+    <DataBoundPage loader={loadRoiPageData} guard={isRoiData} routeLabel="ROI">
       {(data) => (
-        <DashboardLayout title="Dashboard">
-          <KpiGrid>
-            <KpiCard ... />
-          </KpiGrid>
+        <DashboardLayout title="Return on Investment">
           <PanelBento>
-            <section className="panel panel--chart">...</section>
+            <CapexBreakdownChart data={data.capexMix} />
+            <CumulativeCashChart data={data.cumulativeCash} />
+            <AnnualPnLChart data={data.annualPl} />
           </PanelBento>
+          <SweepTable title="Battery Sizing Sensitivity" ... />
         </DashboardLayout>
       )}
     </DataBoundPage>
   );
 }
+
+// frontend/sections/roi/CapexBreakdownChart.tsx - Standalone section
+export function CapexBreakdownChart({ data }: Props) {
+  return (
+    <section className="panel panel--chart">
+      <h3>CAPEX Breakdown</h3>
+      <SimplePieChart data={data} />
+    </section>
+  );
+}
 ```
 
-**Components**:
+**Layout Components**:
 - `DataBoundPage` - Handles data loading, validation, and error states
 - `DashboardLayout` - Standard page wrapper with title/subtitle
 - `KpiGrid` - Grid layout for KPI cards
 - `PanelBento` - Container for chart panels
+
+**Section Components** (`frontend/sections/[page-name]/`):
+- Self-contained chart/visualization sections
+- Accept data as props with typed interfaces
+- Include styling, titles, and chart rendering
+- Reusable across pages when appropriate
+- Organized by the page they primarily belong to
 
 ### 4. **Type Safety**
 - TypeScript strict mode enabled
@@ -174,8 +230,17 @@ Page Component
 - `mocks/generate_demo.py` - Mock data generation
 
 ### TypeScript Frontend (`src/frontend/`)
+- `battery/` - Battery configuration form and types
+- `gpu/` - GPU configuration form, charts, and types
+- `grid/` - Grid supply configuration form and types
 - `components/` - Layout components (DashboardLayout, KpiGrid, etc.)
-- `ui/components/` - UI primitives (KpiCard, charts)
+- `context/` - React Context providers (ConfigContext)
+- `sections/` - Page-specific chart sections organized by route
+  - `sections/curtailment/` - 5 curtailment page chart components
+  - `sections/load-storage/` - 5 load/storage page sections
+  - `sections/network/` - 1 network page chart
+  - `sections/roi/` - 3 ROI page charts
+- `ui/components/` - UI primitives (KpiCard, KpiTable, SweepTable, charts)
 - `ui/hooks/` - React hooks (useMediaQuery, etc.)
 - `dashboard/guards.ts` - Runtime type validation
 

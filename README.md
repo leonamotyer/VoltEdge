@@ -129,8 +129,10 @@ See [src/backend/README.md](./src/backend/README.md) for full backend documentat
 ```
 voltEdge/
 ├── src/
-│   ├── app/              # Next.js App Router (routes only)
+│   ├── app/              # Next.js App Router (thin route wrappers)
 │   │   ├── curtailment/
+│   │   │   ├── page.tsx          # Route component
+│   │   │   └── data.ts           # Data loader
 │   │   ├── load-and-storage/
 │   │   ├── network-and-fiber/
 │   │   ├── roi/
@@ -150,15 +152,25 @@ voltEdge/
 │   │   └── requirements.txt      # Python dependencies
 │   │
 │   └── frontend/         # TypeScript UI layer
+│       ├── battery/      # Battery configuration
+│       ├── gpu/          # GPU configuration & charts
+│       ├── grid/         # Grid supply configuration
 │       ├── components/   # Layout components (DashboardLayout, KpiGrid, etc.)
-│       ├── ui/          # AppShell, charts, KPI cards, hooks
-│       └── dashboard/   # Type guards & validation
+│       ├── context/      # React Context providers
+│       ├── sections/     # Page-specific chart sections
+│       │   ├── curtailment/      # 5 curtailment charts
+│       │   ├── load-storage/     # 5 load/storage sections
+│       │   ├── network/          # 1 network chart
+│       │   └── roi/              # 3 ROI charts
+│       ├── ui/           # AppShell, charts, KPI cards, hooks
+│       └── dashboard/    # Type guards & validation
 │
-├── ARCHITECTURE.md       # Architecture documentation
-└── package.json         # Node.js dependencies
+├── Docs/
+│   └── ARCHITECTURE.md   # Architecture documentation
+└── package.json          # Node.js dependencies
 ```
 
-See [ARCHITECTURE.md](./ARCHITECTURE.md) for detailed architectural patterns and design principles.
+See [Docs/ARCHITECTURE.md](./Docs/ARCHITECTURE.md) for detailed architectural patterns and design principles.
 
 ## License
 
