@@ -1,0 +1,16 @@
+configuration_name,gpu_model,number_of_gpus,rental_price_per_hour,power_per_gpu_kw,utilization_pct,gpu_purchase_cost_cad,system_lifetime_years,discount_rate_pct,fixed_annual_om_cad,deployment_cost_cad,include_battery,battery_preset,battery_size_mwh,battery_power_mw,round_trip_efficiency_pct,battery_lifetime_years,battery_energy_cost_cad_per_kwh,battery_power_system_cost_cad_per_kw,battery_annual_om_cad,grid_power_limit_mw,grid_price_override_cad_per_mwh,btf_power_limit_mw,btf_price_cad_per_mwh,curtailment_value_cad_per_mwh,allow_partial_grid_supply,allow_partial_btf_supply,price_escalation_rate_pct,priority_rule
+Small Test Deployment,RTX 3090,50,3.5,0.35,85,1500,10,8,50000,250000,true,minimal,0.5,,90,12,400,200,25000,0.5,75,0.25,45,25,true,true,2,curtailment_first
+Medium Production - RTX 5090,RTX 5090,100,5.2,0.575,90,2800,12,8,125000,500000,true,medium,2.0,,90,12,400,200,75000,1.0,80,0.5,45,25,true,true,2,curtailment_first
+Large Scale - A6000,A6000,200,4.8,0.3,95,5500,15,7,250000,1000000,true,large,6.0,,92,15,380,190,150000,2.0,85,1.0,50,28,true,true,2.5,grid_first
+Enterprise - PRO 6000,PRO 6000,150,6.0,0.25,92,7200,15,7,200000,750000,true,medium,3.0,,92,15,380,190,100000,1.5,82,0.75,48,26,true,true,2,curtailment_first
+Budget Configuration,RTX 3090,30,3.0,0.35,80,1500,8,9,30000,150000,false,minimal,0.0,,90,12,400,200,0,0.3,,0.0,,22,true,false,1.5,grid_first
+No Battery - Grid Heavy,RTX 5090,75,5.0,0.575,88,2800,10,8,100000,400000,false,minimal,0.0,,90,12,400,200,0,1.5,78,0.0,,24,true,false,2,grid_first
+Balanced Hybrid,RTX 5090,120,5.2,0.575,90,2800,12,8,150000,600000,true,medium,2.5,2.5,91,12,390,195,80000,1.2,80,0.8,46,25,true,true,2,balanced
+High Battery Capacity,A6000,180,4.8,0.3,94,5500,15,7,225000,900000,true,large,8.0,8.0,92,15,380,190,175000,1.8,84,0.9,49,27,true,true,2.5,curtailment_first
+Custom Mix,Custom,100,4.5,0.45,87,3000,12,8,120000,500000,true,custom,3.5,2.0,90,12,400,200,90000,1.1,79,0.6,47,26,true,true,2,curtailment_first
+Maximum Utilization,RTX 5090,250,5.2,0.575,98,2800,12,8,300000,1250000,true,large,12.0,12.0,92,15,380,190,250000,3.0,86,1.5,51,29,true,true,2.5,curtailment_first
+Cost Optimized,RTX 3090,60,3.2,0.35,83,1500,10,9,60000,300000,true,minimal,1.0,1.0,90,12,400,200,35000,0.6,76,0.3,44,24,true,true,1.8,curtailment_first
+Research Cluster,A6000,90,4.5,0.3,91,5500,12,7.5,110000,450000,true,medium,2.2,2.2,91,12,390,195,70000,1.0,81,0.5,46,25,true,true,2,balanced
+High Availability,PRO 6000,180,6.0,0.25,95,7200,15,7,275000,1100000,true,large,7.0,7.0,92,15,380,190,180000,2.5,85,1.2,50,28,true,true,2.5,grid_first
+BTF Heavy,RTX 5090,110,5.2,0.575,89,2800,12,8,135000,550000,true,medium,2.3,2.3,90,12,400,200,78000,0.5,82,2.0,42,25,true,true,2,btf_first
+Grid Free - Pure Curtailment,A6000,160,4.8,0.3,93,5500,15,7,200000,800000,true,large,5.5,5.5,92,15,380,190,140000,0.0,,0.0,,20,false,false,1.5,curtailment_first
