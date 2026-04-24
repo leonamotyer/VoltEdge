@@ -5,8 +5,9 @@ import { KpiGrid } from "@/frontend/components/KpiGrid";
 import { PanelBento } from "@/frontend/components/PanelBento";
 import { KpiCard } from "@/frontend/ui/components/KpiCard";
 import { SweepTable } from "@/frontend/ui/components/SweepTable";
-import { SimpleBarChart, SimpleLineChart, SimplePieChart } from "@/frontend/ui/components/charts/SimpleCharts";
-import { CHART_BLUE, CHART_GREEN } from "@/frontend/ui/chartTheme";
+import { CapexBreakdownChart } from "@/frontend/sections/roi/CapexBreakdownChart";
+import { CumulativeCashChart } from "@/frontend/sections/roi/CumulativeCashChart";
+import { AnnualPnLChart } from "@/frontend/sections/roi/AnnualPnLChart";
 
 /** Placeholder figures — swap for model output when the economics API exists. */
 const kpis = {
@@ -69,18 +70,9 @@ export default function RoiPage() {
         <KpiCard label="Total CAPEX (demo)" value={`$${(kpis.capexCad / 1e6).toFixed(1)}M CAD`} sub="Battery + compute + racks" tone="blue" />
       </KpiGrid>
       <PanelBento>
-        <section className="panel panel--chart">
-          <h3>CAPEX breakdown (demo)</h3>
-          <SimplePieChart data={capexMix} />
-        </section>
-        <section className="panel panel--chart panel--span-full">
-          <h4>Cumulative cash position (demo)</h4>
-          <SimpleLineChart data={cumulativeCash} xKey="year" yKey="cumulativeCad" color={CHART_GREEN} />
-        </section>
-        <section className="panel panel--chart panel--span-full">
-          <h4>Annual P&amp;L lines (demo, $ CAD)</h4>
-          <SimpleBarChart data={annualPl} xKey="line" yKey="cad" color={CHART_BLUE} />
-        </section>
+        <CapexBreakdownChart data={capexMix} />
+        <CumulativeCashChart data={cumulativeCash} />
+        <AnnualPnLChart data={annualPl} />
       </PanelBento>
 
       {/* Full Sweep Table - Battery Sizing Sensitivity */}

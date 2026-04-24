@@ -2,17 +2,16 @@
 
 import { DataBoundPage } from "@/frontend/components/DataBoundPage";
 import { DashboardLayout } from "@/frontend/components/DashboardLayout";
-import { KpiGrid } from "@/frontend/components/KpiGrid";
 import { PanelBento } from "@/frontend/components/PanelBento";
-import { KpiCard } from "@/frontend/ui/components/KpiCard";
 import { KpiTable } from "@/frontend/ui/components/KpiTable";
 import { isLoadAndStorageData } from "@/frontend/dashboard/guards";
-import { GpuCharts } from "@/frontend/gpu/GpuCharts";
-import { SimpleLineChart, BatteryPowerVsPriceChart } from "@/frontend/ui/components/charts/SimpleCharts";
-import { CHART_GREEN, CHART_BLUE, CHART_ORANGE } from "@/frontend/ui/chartTheme";
 import { loadLoadAndStoragePageData } from "./data";
 import { useConfig } from "@/frontend/context/ConfigContext";
 import { calculateGpuMetrics } from "@/frontend/gpu/types";
+import { GpuRevenueSection } from "@/frontend/sections/load-storage/GpuRevenueSection";
+import { BatteryStorageKpis } from "@/frontend/sections/load-storage/BatteryStorageKpis";
+import { BatteryStateOfChargeChart } from "@/frontend/sections/load-storage/BatteryStateOfChargeChart";
+import { ChargeDischargePriceChart } from "@/frontend/sections/load-storage/ChargeDischargePriceChart";
 
 export default function LoadAndStoragePage() {
   const { gpuConfig, batteryConfig, gridConfig } = useConfig();
@@ -28,94 +27,21 @@ export default function LoadAndStoragePage() {
           title="Load and Storage"
           subtitle="GPU compute and battery storage simulation with curtailed wind energy"
         >
-          {/* GPU Charts - shown when config is set from sidebar */}
-          {gpuConfig && (
-            <section style={{ marginBottom: "clamp(1.5rem, 4vw, 2rem)" }}>
-              <h3
-                style={{
-                  fontSize: "clamp(1rem, 2.8vw, 1.125rem)",
-                  fontWeight: 600,
-                  color: "#1a3050",
-                  marginBottom: "clamp(0.75rem, 2vw, 1rem)",
-                }}
-              >
-                GPU Revenue Simulation
-              </h3>
-              <GpuCharts config={gpuConfig} energyMix={data.energyMix} />
-            </section>
-          )}
+          {/* GPU Revenue Section - conditional rendering handled inside component */}
+          <GpuRevenueSection gpuConfig={gpuConfig} energyMix={data.energyMix} />
 
-          {/* Battery Storage Simulation Results */}
-          <section>
-            <h3
-              style={{
-                fontSize: "clamp(1rem, 2.8vw, 1.125rem)",
-                fontWeight: 600,
-                color: "#1a3050",
-                marginBottom: "clamp(0.75rem, 2vw, 1rem)",
-              }}
-            >
-              Battery Storage Simulation
-            </h3>
+          {/* Battery Storage KPIs */}
+          <BatteryStorageKpis
+            capturedMWh={data.capturedMWh}
+            releasedMWh={data.releasedMWh}
+            estimatedGrossRevenueCad={data.estimatedGrossRevenueCad}
+          />
 
-            <KpiGrid>
-              <KpiCard
-                featured
-                label="Captured"
-                value={`${data.capturedMWh.toLocaleString()} MWh`}
-                sub="From curtailed periods"
-                tone="green"
-              />
-              <KpiCard
-                label="Released"
-                value={`${data.releasedMWh.toLocaleString()} MWh`}
-                sub="After round-trip losses"
-                tone="blue"
-              />
-              <KpiCard
-                label="Gross revenue"
-                value={`$${data.estimatedGrossRevenueCad.toLocaleString()} CAD`}
-                sub="From battery arbitrage"
-                tone="orange"
-              />
-            </KpiGrid>
-            <PanelBento>
-              <section className="panel panel--chart panel--span-full">
-                <h3>Battery State of Charge (48h)</h3>
-                <SimpleLineChart
-                  data={data.socTimeSeries.map((row) => ({
-                    time: new Date(row.timestamp).toLocaleString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      hour: "numeric",
-                    }),
-                    soc: row.socPercent,
-                  }))}
-                  xKey="time"
-                  yKey="soc"
-                  color={CHART_GREEN}
-                />
-              </section>
-              <section className="panel panel--chart panel--span-full">
-                <h3>Charge/Discharge Cycles vs Pool Price</h3>
-                <p style={{
-                  fontSize: "clamp(0.8rem, 2vw, 0.875rem)",
-                  color: "#64748b",
-                  marginBottom: "clamp(0.5rem, 1.5vw, 0.75rem)",
-                  padding: "0 clamp(1rem, 3vw, 1.25rem)",
-                  lineHeight: "1.5"
-                }}>
-                  Battery charges during low/negative prices (curtailment) and discharges during high prices
-                </p>
-                <BatteryPowerVsPriceChart
-                  data={data.chargeDischargeCycles}
-                  chargeColor={CHART_GREEN}
-                  dischargeColor={CHART_BLUE}
-                  priceColor={CHART_ORANGE}
-                />
-              </section>
-            </PanelBento>
-          </section>
+          {/* Battery Charts */}
+          <PanelBento>
+            <BatteryStateOfChargeChart socTimeSeries={data.socTimeSeries} />
+            <ChargeDischargePriceChart chargeDischargeCycles={data.chargeDischargeCycles} />
+          </PanelBento>
 
           {/* Key Performance Indicators Table */}
           <section style={{ marginTop: "clamp(1.5rem, 4vw, 2rem)" }}>

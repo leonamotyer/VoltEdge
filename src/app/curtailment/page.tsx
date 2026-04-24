@@ -6,12 +6,11 @@ import { DashboardLayout } from "@/frontend/components/DashboardLayout";
 import { KpiGrid } from "@/frontend/components/KpiGrid";
 import { PanelBento } from "@/frontend/components/PanelBento";
 import { KpiCard } from "@/frontend/ui/components/KpiCard";
-import {
-  SimpleBarChart,
-  SimpleGroupedBarChart,
-  SimpleLineChart,
-} from "@/frontend/ui/components/charts/SimpleCharts";
-import { CHART_BLUE, CHART_GREEN, CHART_ORANGE } from "@/frontend/ui/chartTheme";
+import { HourlyCurtailmentGapChart } from "@/frontend/sections/curtailment/HourlyCurtailmentGapChart";
+import { MonthlyCurtailmentProfileChart } from "@/frontend/sections/curtailment/MonthlyCurtailmentProfileChart";
+import { AvgCurtailmentTrendChart } from "@/frontend/sections/curtailment/AvgCurtailmentTrendChart";
+import { EventDurationChart } from "@/frontend/sections/curtailment/EventDurationChart";
+import { HourlyWindProfileChart } from "@/frontend/sections/curtailment/HourlyWindProfileChart";
 import { loadCurtailmentPageData } from "./data";
 
 // Mock data for supplementary charts (not yet returned by API)
@@ -68,38 +67,11 @@ export default function CurtailmentPage() {
               <KpiCard label="Longest Event" value="6.0 hr" sub="Single longest continuous span (mock)" tone="orange" />
             </KpiGrid>
             <PanelBento>
-              <section className="panel panel--chart">
-                <h3>Hourly Curtailment Gap</h3>
-                <SimpleLineChart data={hourlyData} xKey="timestamp" yKey="gapMWh" color={CHART_BLUE} />
-              </section>
-              <section className="panel panel--chart panel--span-full">
-                <h4>Monthly curtailment profile (mock — total gap vs unused energy)</h4>
-                <SimpleGroupedBarChart
-                  data={mockMonthlyProfile}
-                  xKey="label"
-                  series={[
-                    { dataKey: "totalCurtailmentMWh", name: "Total curtailment (MWh)", color: CHART_ORANGE },
-                    { dataKey: "unusedEnergyMWh", name: "Unused energy (MWh)", color: CHART_GREEN },
-                  ]}
-                />
-              </section>
-              <section className="panel panel--chart">
-                <h4>Average curtailment trend (mock — MWh per hour by month)</h4>
-                <SimpleLineChart
-                  data={mockAvgTrend}
-                  xKey="label"
-                  yKey="avgCurtailmentMWhPerHour"
-                  color={CHART_BLUE}
-                />
-              </section>
-              <section className="panel panel--chart">
-                <h4>Curtailment event duration (mock — hours accumulated by length bucket)</h4>
-                <SimpleBarChart data={mockEventDuration} xKey="bucket" yKey="hoursInBucket" color={CHART_ORANGE} />
-              </section>
-              <section className="panel panel--chart panel--span-full">
-                <h4>Hour-of-day wind profile (mock)</h4>
-                <SimpleBarChart data={mockScadaHourly} xKey="hour" yKey="avgWindMs" color={CHART_GREEN} />
-              </section>
+              <HourlyCurtailmentGapChart data={hourlyData} />
+              <MonthlyCurtailmentProfileChart data={mockMonthlyProfile} />
+              <AvgCurtailmentTrendChart data={mockAvgTrend} />
+              <EventDurationChart data={mockEventDuration} />
+              <HourlyWindProfileChart data={mockScadaHourly} />
             </PanelBento>
             {"rawDataByRepository" in data && data.rawDataByRepository ? (
               <section className="panel panel--data">

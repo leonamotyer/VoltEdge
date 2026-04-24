@@ -116,10 +116,11 @@ export function SweepTable({ columns, rows, title }: SweepTableProps) {
         }
 
         .sweep-table-wrapper {
+          /* Allow horizontal scroll only on very small screens if needed */
           overflow-x: auto;
           -webkit-overflow-scrolling: touch;
-          max-height: 450px;
-          overflow-y: auto;
+          /* No vertical scrolling - table expands to show all content */
+          overflow-y: visible;
         }
 
         .sweep-table {
@@ -159,7 +160,7 @@ export function SweepTable({ columns, rows, title }: SweepTableProps) {
 
         .sweep-table tbody tr:hover {
           background-color: #f1f5f9;
-          transform: scale(1.005);
+          transform: scale(1.002);
         }
 
         .sweep-table tbody tr:last-child {
@@ -185,16 +186,75 @@ export function SweepTable({ columns, rows, title }: SweepTableProps) {
           transition: background-color 0.15s ease;
         }
 
-        /* Responsive adjustments */
+        /* Mobile optimizations */
         @media (max-width: 640px) {
+          .sweep-table-container {
+            border-radius: 12px;
+            padding: 0.75rem;
+            margin-top: 1rem;
+          }
+
           .sweep-table-wrapper {
-            margin: 0 -0.5rem;
+            margin: 0;
+          }
+
+          .sweep-table {
+            font-size: 0.68rem;
+          }
+
+          .sweep-table th {
+            padding: 0.5rem 0.4rem;
+            font-size: 0.62rem;
+            letter-spacing: 0.01em;
+          }
+
+          .sweep-table td {
+            padding: 0.5rem 0.4rem;
+            font-size: 0.66rem;
+          }
+
+          /* Reduce hover effect on mobile */
+          .sweep-table tbody tr:hover {
+            transform: scale(1);
+          }
+        }
+
+        /* Extra small devices - even tighter spacing */
+        @media (max-width: 400px) {
+          .sweep-table-container {
+            padding: 0.6rem;
           }
 
           .sweep-table th,
           .sweep-table td {
-            padding: 0.6rem 0.5rem;
-            font-size: 0.7rem;
+            padding: 0.4rem 0.3rem;
+            font-size: 0.6rem;
+          }
+
+          .sweep-table th {
+            font-size: 0.58rem;
+          }
+        }
+
+        /* Very wide tables might still need horizontal scroll on small screens */
+        @media (max-width: 640px) {
+          .sweep-table-wrapper {
+            /* Enable smooth horizontal scrolling if table is too wide */
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+          }
+
+          .sweep-table-wrapper::-webkit-scrollbar {
+            height: 4px;
+          }
+
+          .sweep-table-wrapper::-webkit-scrollbar-track {
+            background: #f1f5f9;
+          }
+
+          .sweep-table-wrapper::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 2px;
           }
         }
       `}</style>

@@ -6,8 +6,7 @@ import { DashboardLayout } from "@/frontend/components/DashboardLayout";
 import { KpiGrid } from "@/frontend/components/KpiGrid";
 import { PanelBento } from "@/frontend/components/PanelBento";
 import { KpiCard } from "@/frontend/ui/components/KpiCard";
-import { SimpleBarChart } from "@/frontend/ui/components/charts/SimpleCharts";
-import { CHART_BLUE } from "@/frontend/ui/chartTheme";
+import { LatencyThresholdChart } from "@/frontend/sections/network/LatencyThresholdChart";
 import { loadNetworkAndFiberPageData } from "./data";
 
 export default function NetworkAndFiberPage() {
@@ -18,13 +17,6 @@ export default function NetworkAndFiberPage() {
       routeLabel="Network and Fiber Feasibility"
     >
       {(data) => {
-        // Build threshold comparison data
-        const thresholdData = [
-          { name: "Estimated", latencyMs: data.estimatedLatencyMs },
-          { name: "Inference Max", latencyMs: 20 },
-          { name: "Training Max", latencyMs: 150 },
-        ];
-
         return (
           <DashboardLayout title="Network and Fiber Feasibility">
             <KpiGrid>
@@ -49,10 +41,7 @@ export default function NetworkAndFiberPage() {
               />
             </KpiGrid>
             <PanelBento>
-              <section className="panel panel--chart">
-                <h3>Latency vs Thresholds</h3>
-                <SimpleBarChart data={thresholdData} xKey="name" yKey="latencyMs" color={CHART_BLUE} />
-              </section>
+              <LatencyThresholdChart estimatedLatencyMs={data.estimatedLatencyMs} />
             </PanelBento>
             {"rawDataByRepository" in data && data.rawDataByRepository ? (
               <section className="panel panel--data">
