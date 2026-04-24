@@ -48,3 +48,18 @@ export function NavIconRoi({ className }: { className?: string }) {
     </svg>
   );
 }
+
+/** GPU / compute icon for GPU simulation nav. */
+export function NavIconGpu({ className }: { className?: string }) {
+  return (
+    <svg className={className} width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden focusable="false">
+      <rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" strokeWidth="2" />
+      <rect x="6" y="9" width="3" height="2.5" rx="0.5" fill="currentColor" />
+      <rect x="10.5" y="9" width="3" height="2.5" rx="0.5" fill="currentColor" />
+      <rect x="15" y="9" width="3" height="2.5" rx="0.5" fill="currentColor" />
+      <rect x="6" y="13" width="3" height="2.5" rx="0.5" fill="currentColor" />
+      <rect x="10.5" y="13" width="3" height="2.5" rx="0.5" fill="currentColor" />
+      <rect x="15" y="13" width="3" height="2.5" rx="0.5" fill="currentColor" />
+    </svg>
+  );
+}
