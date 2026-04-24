@@ -43,3 +43,4 @@ Thumbs.db
 # Optional tooling
 .eslintcache
 .prettiercache
+/.env*

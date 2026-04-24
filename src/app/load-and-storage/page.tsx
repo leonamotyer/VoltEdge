@@ -5,12 +5,14 @@ import { DashboardLayout } from "@/frontend/components/DashboardLayout";
 import { KpiGrid } from "@/frontend/components/KpiGrid";
 import { PanelBento } from "@/frontend/components/PanelBento";
 import { KpiCard } from "@/frontend/ui/components/KpiCard";
+import { KpiTable } from "@/frontend/ui/components/KpiTable";
 import { isLoadAndStorageData } from "@/frontend/dashboard/guards";
 import { GpuCharts } from "@/frontend/gpu/GpuCharts";
 import { SimpleLineChart, BatteryPowerVsPriceChart } from "@/frontend/ui/components/charts/SimpleCharts";
 import { CHART_GREEN, CHART_BLUE, CHART_ORANGE } from "@/frontend/ui/chartTheme";
 import { loadLoadAndStoragePageData } from "./data";
 import { useConfig } from "@/frontend/context/ConfigContext";
+import { calculateGpuMetrics } from "@/frontend/gpu/types";
 
 export default function LoadAndStoragePage() {
   const { gpuConfig, batteryConfig, gridConfig } = useConfig();
@@ -113,6 +115,135 @@ export default function LoadAndStoragePage() {
                 />
               </section>
             </PanelBento>
+          </section>
+
+          {/* Key Performance Indicators Table */}
+          <section style={{ marginTop: "clamp(1.5rem, 4vw, 2rem)" }}>
+            <KpiTable
+              title="Key Performance Indicators"
+              rows={[
+                // GPU Configuration
+                {
+                  metric: "GPU Type",
+                  value: gpuConfig?.gpuModel || "Not configured",
+                },
+                {
+                  metric: "GPU Count",
+                  value: gpuConfig ? `${gpuConfig.numberOfGpus.toLocaleString()} GPUs` : "—",
+                },
+                {
+                  metric: "GPU Rental Rate",
+                  value: gpuConfig ? `$${gpuConfig.rentalPricePerHour.toFixed(3)} CAD/hr` : "—",
+                },
+                {
+                  metric: "GPU Purchase Cost",
+                  value: gpuConfig?.gpuPurchaseCost ? `$${gpuConfig.gpuPurchaseCost.toLocaleString()} CAD` : "—",
+                },
+                {
+                  metric: "Power per GPU",
+                  value: gpuConfig?.powerPerGpu ? `${gpuConfig.powerPerGpu.toFixed(3)} kW` : "—",
+                },
+                {
+                  metric: "GPU Electrical Load",
+                  value: gpuConfig
+                    ? `${calculateGpuMetrics(gpuConfig).totalComputePowerMw.toFixed(3)} MW`
+                    : "—",
+                },
+                {
+                  metric: "GPU Utilization",
+                  value: gpuConfig ? `${gpuConfig.utilization}%` : "—",
+                },
+                {
+                  metric: "System Lifetime",
+                  value: gpuConfig ? `${gpuConfig.systemLifetime} years` : "—",
+                },
+                {
+                  metric: "Discount Rate",
+                  value: gpuConfig ? `${gpuConfig.discountRate}%` : "—",
+                },
+                {
+                  metric: "Deployment Cost",
+                  value: gpuConfig?.deploymentCost ? `$${gpuConfig.deploymentCost.toLocaleString()} CAD` : "—",
+                },
+                // Battery Configuration
+                {
+                  metric: "Battery Enabled",
+                  value: batteryConfig?.includeBattery ? "Yes" : "No",
+                },
+                ...(batteryConfig?.includeBattery
+                  ? [
+                      {
+                        metric: "Battery Preset",
+                        value: batteryConfig.preset || "—",
+                      },
+                      {
+                        metric: "Battery Capacity",
+                        value: `${batteryConfig.batterySize.toFixed(1)} MWh @ ${batteryConfig.batteryPower?.toFixed(1) || "—"} MW`,
+                      },
+                      {
+                        metric: "Round-Trip Efficiency",
+                        value: `${batteryConfig.roundTripEfficiency}%`,
+                      },
+                      {
+                        metric: "Battery Lifetime",
+                        value: `${batteryConfig.batteryLifetime} years`,
+                      },
+                      {
+                        metric: "Battery Energy Cost",
+                        value: `$${batteryConfig.batteryEnergyCost.toLocaleString()} CAD/kWh`,
+                      },
+                      {
+                        metric: "Battery Power System Cost",
+                        value: `$${batteryConfig.batteryPowerSystemCost.toLocaleString()} CAD/kW`,
+                      },
+                      {
+                        metric: "Battery Annual O&M",
+                        value: `$${batteryConfig.fixedAnnualOM.toLocaleString()} CAD/year`,
+                      },
+                    ]
+                  : []),
+                // Grid Supply Configuration
+                {
+                  metric: "Grid Power Limit",
+                  value: gridConfig ? `${gridConfig.gridPowerLimit.toFixed(2)} MW` : "—",
+                },
+                {
+                  metric: "Grid Price Override",
+                  value:
+                    gridConfig?.gridPriceOverride !== null && gridConfig.gridPriceOverride > 0
+                      ? `$${gridConfig.gridPriceOverride.toFixed(2)} CAD/MWh`
+                      : "Market price",
+                },
+                {
+                  metric: "Behind-the-Fence Power",
+                  value: gridConfig ? `${gridConfig.btfPowerLimit.toFixed(2)} MW` : "—",
+                },
+                {
+                  metric: "BTF Price",
+                  value: gridConfig ? `$${gridConfig.btfPrice.toFixed(2)} CAD/MWh` : "—",
+                },
+                {
+                  metric: "Curtailment Value",
+                  value: gridConfig ? `$${gridConfig.curtailmentValue.toFixed(2)} CAD/MWh` : "—",
+                },
+                {
+                  metric: "Partial Grid Supply",
+                  value: gridConfig?.allowPartialGridSupply ? "Allowed" : "Not allowed",
+                },
+                {
+                  metric: "Partial BTF Supply",
+                  value: gridConfig?.allowPartialBtfSupply ? "Allowed" : "Not allowed",
+                },
+                {
+                  metric: "Price Escalation Rate",
+                  value: gridConfig ? `${gridConfig.priceEscalationRate}% annually` : "—",
+                },
+                {
+                  metric: "Priority Rule",
+                  value: gridConfig?.priorityRule || "—",
+                },
+              ]}
+            />
           </section>
 
         </DashboardLayout>

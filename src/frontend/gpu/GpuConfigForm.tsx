@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import type { GpuConfig, GpuModelType } from "./types";
 import { GPU_PRESETS, GPU_CONFIG_DEFAULTS, calculateGpuMetrics } from "./types";
+import { CsvUpload } from "@/frontend/ui/components/CsvUpload";
 
 interface GpuConfigFormProps {
   onConfigChange?: (config: GpuConfig) => void;
@@ -116,6 +117,14 @@ export function GpuConfigForm({ onConfigChange }: GpuConfigFormProps) {
       {/* Advanced Settings (collapsed by default) */}
       {showAdvanced && (
         <div className="form-section">
+          {/* CSV Upload - First Advanced Setting */}
+          <div className="form-group" style={{ marginBottom: "1.5rem" }}>
+            <label className="form-label" style={{ marginBottom: "0.5rem", display: "block" }}>
+              Upload Configuration
+            </label>
+            <CsvUpload />
+          </div>
+
           <div className="form-grid">
             <div className="form-group">
               <label className="form-label" htmlFor="power-per-gpu">
