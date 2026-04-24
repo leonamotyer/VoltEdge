@@ -40,6 +40,24 @@ html {
   --sidebar-nav-hover: rgba(255, 255, 255, 0.11);
   --sidebar-nav-active-bg: rgba(110, 184, 154, 0.16);
   --sidebar-nav-active-border: #6eb89a;
+
+  /* Form component variables */
+  --color-primary: #1e3a52;
+  --color-success: #6eb89a;
+  --color-warning: #c05621;
+  --color-form-label: #ffffff;
+  --color-form-hint: #ffffff;
+  --color-form-required: #dc2626;
+
+  /* Chart-specific color variables */
+  --color-chart-battery-charge: #6eb89a;
+  --color-chart-battery-discharge: #c05621;
+  --color-chart-gpu: #1a3a52;
+  --color-chart-grid: #e8e9ee;
+  --color-chart-price: #c05621;
+
+  /* Form sizing */
+  --form-unit-size: 0.25rem;
 }
 
 /* Custom scrollbar styling - positioned on the left */

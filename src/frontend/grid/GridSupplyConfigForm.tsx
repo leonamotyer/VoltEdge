@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { GridSupplyConfig, PriorityRule } from "./types";
 import { PRIORITY_RULES, getGridSupplyDerivedMetrics } from "./types";
+import { FormInput } from "@/frontend/ui/forms/FormInput";
 
 interface GridSupplyConfigFormProps {
   config: GridSupplyConfig;
@@ -25,94 +26,66 @@ export function GridSupplyConfigForm({ config, onChange, totalComputePowerMW }: 
       <h3>Basic Settings</h3>
 
       {/* Grid Power Settings */}
-      <div className="form-group">
-        <label className="form-label" htmlFor="gridPowerLimit">
-          Grid Power Limit <span style={{ fontSize: "0.875rem", color: "#6b7280" }}>(MW)</span>
-        </label>
-        <input
-          id="gridPowerLimit"
-          type="number"
-          className="form-input"
-          min="0"
-          step="0.1"
-          value={config.gridPowerLimit}
-          onChange={(e) => handleUpdate({ gridPowerLimit: parseFloat(e.target.value) || 0 })}
-        />
-        <div className="form-hint">Set to 0 to disable grid power</div>
-      </div>
+      <FormInput
+        id="gridPowerLimit"
+        label="Grid Power Limit"
+        value={config.gridPowerLimit}
+        onChange={(val) => handleUpdate({ gridPowerLimit: val ?? 0 })}
+        unit="MW"
+        min="0"
+        step="0.1"
+        hint="Set to 0 to disable grid power"
+      />
 
-      <div className="form-group">
-        <label className="form-label" htmlFor="gridPriceOverride">
-          Grid Price Override <span style={{ fontSize: "0.875rem", color: "#6b7280" }}>(CAD/MWh, optional)</span>
-        </label>
-        <input
-          id="gridPriceOverride"
-          type="number"
-          className="form-input"
-          min="0"
-          step="1"
-          value={config.gridPriceOverride ?? ''}
-          onChange={(e) => handleUpdate({
-            gridPriceOverride: e.target.value ? parseFloat(e.target.value) : null
-          })}
-          placeholder="Leave blank to use pool price time series"
-        />
-        <div className="form-hint">If blank, backend uses pool price time series</div>
-      </div>
+      <FormInput
+        id="gridPriceOverride"
+        label="Grid Price Override"
+        value={config.gridPriceOverride ?? ''}
+        onChange={(val) => handleUpdate({ gridPriceOverride: val })}
+        unit="CAD/MWh, optional"
+        min="0"
+        step="1"
+        placeholder="Leave blank to use pool price time series"
+        hint="If blank, backend uses pool price time series"
+      />
 
       {/* BTF Power Settings */}
-      <div className="form-group">
-        <label className="form-label" htmlFor="btfPowerLimit">
-          BTF Power Limit <span style={{ fontSize: "0.875rem", color: "#6b7280" }}>(MW)</span>
-        </label>
-        <input
-          id="btfPowerLimit"
-          type="number"
-          className="form-input"
-          min="0"
-          step="0.1"
-          value={config.btfPowerLimit}
-          onChange={(e) => handleUpdate({ btfPowerLimit: parseFloat(e.target.value) || 0 })}
-        />
-        <div className="form-hint">Set to 0 to disable BTF power</div>
-      </div>
+      <FormInput
+        id="btfPowerLimit"
+        label="BTF Power Limit"
+        value={config.btfPowerLimit}
+        onChange={(val) => handleUpdate({ btfPowerLimit: val ?? 0 })}
+        unit="MW"
+        min="0"
+        step="0.1"
+        hint="Set to 0 to disable BTF power"
+      />
 
       {derived.btfEnabled && (
-        <div className="form-group">
-          <label className="form-label" htmlFor="btfPrice">
-            BTF Price <span style={{ fontSize: "0.875rem", color: "#6b7280" }}>(CAD/MWh)</span>
-          </label>
-          <input
-            id="btfPrice"
-            type="number"
-            className="form-input"
-            min="0"
-            step="1"
-            value={config.btfPrice}
-            onChange={(e) => handleUpdate({ btfPrice: parseFloat(e.target.value) || 0 })}
-            required
-          />
-        </div>
+        <FormInput
+          id="btfPrice"
+          label="BTF Price"
+          value={config.btfPrice}
+          onChange={(val) => handleUpdate({ btfPrice: val ?? 0 })}
+          unit="CAD/MWh"
+          min="0"
+          step="1"
+          required
+        />
       )}
 
       {/* Curtailment Value */}
-      <div className="form-group">
-        <label className="form-label" htmlFor="curtailmentValue">
-          Curtailment Value <span style={{ fontSize: "0.875rem", color: "#6b7280" }}>(CAD/MWh)</span>
-          <span style={{ color: "#ef4444", marginLeft: "0.25rem" }}>*</span>
-        </label>
-        <input
-          id="curtailmentValue"
-          type="number"
-          className="form-input"
-          min="0"
-          step="1"
-          value={config.curtailmentValue}
-          onChange={(e) => handleUpdate({ curtailmentValue: parseFloat(e.target.value) || 0 })}
-          required
-        />
-        <div className="form-hint">Required - typically much lower than grid/BTF price</div>
-      </div>
+      <FormInput
+        id="curtailmentValue"
+        label="Curtailment Value"
+        value={config.curtailmentValue}
+        onChange={(val) => handleUpdate({ curtailmentValue: val ?? 0 })}
+        unit="CAD/MWh"
+        min="0"
+        step="1"
+        required
+        hint="Required - typically much lower than grid/BTF price"
+      />
 
       {/* Advanced Settings Toggle */}
       <button type="button" className="advanced-toggle" onClick={() => setShowAdvanced(!showAdvanced)}>
@@ -156,21 +129,16 @@ export function GridSupplyConfigForm({ config, onChange, totalComputePowerMW }: 
           </div>
 
           {/* Price Escalation */}
-          <div className="form-group">
-            <label className="form-label" htmlFor="priceEscalationRate">
-              Price Escalation Rate <span style={{ fontSize: "0.875rem", color: "#6b7280" }}>(%/year)</span>
-            </label>
-            <input
-              id="priceEscalationRate"
-              type="number"
-              className="form-input"
-              min="0"
-              max="100"
-              step="0.1"
-              value={config.priceEscalationRate}
-              onChange={(e) => handleUpdate({ priceEscalationRate: parseFloat(e.target.value) || 0 })}
-            />
-          </div>
+          <FormInput
+            id="priceEscalationRate"
+            label="Price Escalation Rate"
+            value={config.priceEscalationRate}
+            onChange={(val) => handleUpdate({ priceEscalationRate: val ?? 0 })}
+            unit="%/year"
+            min="0"
+            max="100"
+            step="0.1"
+          />
 
           {/* Priority Rule */}
           <div className="form-group">

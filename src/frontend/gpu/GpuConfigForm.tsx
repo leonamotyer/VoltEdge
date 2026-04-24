@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import type { GpuConfig, GpuModelType } from "./types";
 import { GPU_PRESETS, GPU_CONFIG_DEFAULTS, calculateGpuMetrics } from "./types";
 import { CsvUpload } from "@/frontend/ui/components/CsvUpload";
+import { FormInput } from "@/frontend/ui/forms/FormInput";
 
 interface GpuConfigFormProps {
   onConfigChange?: (config: GpuConfig) => void;
@@ -76,35 +77,25 @@ export function GpuConfigForm({ onConfigChange }: GpuConfigFormProps) {
         </div>
 
         <div className="form-grid">
-          <div className="form-group">
-            <label className="form-label" htmlFor="num-gpus">
-              Number of GPUs <span style={{ color: "#dc2626" }}>*</span>
-            </label>
-            <input
-              id="num-gpus"
-              type="number"
-              className="form-input"
-              min="1"
-              value={config.numberOfGpus}
-              onChange={(e) => setConfig({ ...config, numberOfGpus: parseInt(e.target.value) || 0 })}
-            />
-          </div>
+          <FormInput
+            id="num-gpus"
+            label="Number of GPUs"
+            value={config.numberOfGpus}
+            onChange={(val) => setConfig({ ...config, numberOfGpus: val ?? 0 })}
+            min="1"
+            required
+          />
 
-          <div className="form-group">
-            <label className="form-label" htmlFor="rental-price">
-              Rental Price <span style={{ color: "#dc2626" }}>*</span>
-            </label>
-            <input
-              id="rental-price"
-              type="number"
-              className="form-input"
-              min="0"
-              step="0.01"
-              value={config.rentalPricePerHour}
-              onChange={(e) => setConfig({ ...config, rentalPricePerHour: parseFloat(e.target.value) || 0 })}
-            />
-            <div className="form-hint">CAD per GPU-hour</div>
-          </div>
+          <FormInput
+            id="rental-price"
+            label="Rental Price"
+            value={config.rentalPricePerHour}
+            onChange={(val) => setConfig({ ...config, rentalPricePerHour: val ?? 0 })}
+            min="0"
+            step="0.01"
+            hint="CAD per GPU-hour"
+            required
+          />
         </div>
       </div>
 
@@ -126,123 +117,87 @@ export function GpuConfigForm({ onConfigChange }: GpuConfigFormProps) {
           </div>
 
           <div className="form-grid">
-            <div className="form-group">
-              <label className="form-label" htmlFor="power-per-gpu">
-                Power per GPU
-              </label>
-              <input
-                id="power-per-gpu"
-                type="number"
-                className="form-input"
-                min="0"
-                step="0.01"
-                value={config.powerPerGpu ?? 0}
-                disabled={!isCustomModel}
-                onChange={(e) => setConfig({ ...config, powerPerGpu: parseFloat(e.target.value) || 0 })}
-              />
-              <div className="form-hint">kW (from preset)</div>
-            </div>
+            <FormInput
+              id="power-per-gpu"
+              label="Power per GPU"
+              value={config.powerPerGpu ?? 0}
+              onChange={(val) => setConfig({ ...config, powerPerGpu: val ?? 0 })}
+              unit="kW"
+              min="0"
+              step="0.01"
+              disabled={!isCustomModel}
+              hint="from preset"
+            />
 
-            <div className="form-group">
-              <label className="form-label" htmlFor="utilization">
-                Utilization
-              </label>
-              <input
-                id="utilization"
-                type="number"
-                className="form-input"
-                min="0"
-                max="100"
-                step="1"
-                value={config.utilization ?? GPU_CONFIG_DEFAULTS.utilization}
-                onChange={(e) => {
-                  const val = parseFloat(e.target.value) || 0;
-                  setConfig({ ...config, utilization: Math.min(100, Math.max(0, val)) });
-                }}
-              />
-              <div className="form-hint">% (expected usage rate)</div>
-            </div>
+            <FormInput
+              id="utilization"
+              label="Utilization"
+              value={config.utilization ?? GPU_CONFIG_DEFAULTS.utilization}
+              onChange={(val) => {
+                const clamped = Math.min(100, Math.max(0, val ?? 0));
+                setConfig({ ...config, utilization: clamped });
+              }}
+              unit="%"
+              min="0"
+              max="100"
+              step="1"
+              hint="expected usage rate"
+            />
 
-            <div className="form-group">
-              <label className="form-label" htmlFor="gpu-cost">
-                GPU Purchase Cost
-              </label>
-              <input
-                id="gpu-cost"
-                type="number"
-                className="form-input"
-                min="0"
-                step="100"
-                value={config.gpuPurchaseCost ?? 0}
-                disabled={!isCustomModel}
-                onChange={(e) => setConfig({ ...config, gpuPurchaseCost: parseFloat(e.target.value) || 0 })}
-              />
-              <div className="form-hint">CAD per GPU (from preset)</div>
-            </div>
+            <FormInput
+              id="gpu-cost"
+              label="GPU Purchase Cost"
+              value={config.gpuPurchaseCost ?? 0}
+              onChange={(val) => setConfig({ ...config, gpuPurchaseCost: val ?? 0 })}
+              unit="CAD per GPU"
+              min="0"
+              step="100"
+              disabled={!isCustomModel}
+              hint="from preset"
+            />
 
-            <div className="form-group">
-              <label className="form-label" htmlFor="system-lifetime">
-                System Lifetime
-              </label>
-              <input
-                id="system-lifetime"
-                type="number"
-                className="form-input"
-                min="1"
-                value={config.systemLifetime ?? GPU_CONFIG_DEFAULTS.systemLifetime}
-                onChange={(e) => setConfig({ ...config, systemLifetime: parseInt(e.target.value) || 0 })}
-              />
-              <div className="form-hint">years (financial horizon)</div>
-            </div>
+            <FormInput
+              id="system-lifetime"
+              label="System Lifetime"
+              value={config.systemLifetime ?? GPU_CONFIG_DEFAULTS.systemLifetime}
+              onChange={(val) => setConfig({ ...config, systemLifetime: val ?? 0 })}
+              unit="years"
+              min="1"
+              hint="financial horizon"
+            />
 
-            <div className="form-group">
-              <label className="form-label" htmlFor="discount-rate">
-                Discount Rate
-              </label>
-              <input
-                id="discount-rate"
-                type="number"
-                className="form-input"
-                min="0"
-                max="100"
-                step="0.1"
-                value={config.discountRate ?? GPU_CONFIG_DEFAULTS.discountRate}
-                onChange={(e) => setConfig({ ...config, discountRate: parseFloat(e.target.value) || 0 })}
-              />
-              <div className="form-hint">% (financial assumption)</div>
-            </div>
+            <FormInput
+              id="discount-rate"
+              label="Discount Rate"
+              value={config.discountRate ?? GPU_CONFIG_DEFAULTS.discountRate}
+              onChange={(val) => setConfig({ ...config, discountRate: val ?? 0 })}
+              unit="%"
+              min="0"
+              max="100"
+              step="0.1"
+              hint="financial assumption"
+            />
 
-            <div className="form-group">
-              <label className="form-label" htmlFor="fixed-om">
-                Fixed Annual O&amp;M
-              </label>
-              <input
-                id="fixed-om"
-                type="number"
-                className="form-input"
-                min="0"
-                step="1000"
-                value={config.fixedAnnualOM ?? GPU_CONFIG_DEFAULTS.fixedAnnualOM}
-                onChange={(e) => setConfig({ ...config, fixedAnnualOM: parseFloat(e.target.value) || 0 })}
-              />
-              <div className="form-hint">CAD per year</div>
-            </div>
+            <FormInput
+              id="fixed-om"
+              label="Fixed Annual O&M"
+              value={config.fixedAnnualOM ?? GPU_CONFIG_DEFAULTS.fixedAnnualOM}
+              onChange={(val) => setConfig({ ...config, fixedAnnualOM: val ?? 0 })}
+              unit="CAD per year"
+              min="0"
+              step="1000"
+            />
 
-            <div className="form-group">
-              <label className="form-label" htmlFor="deployment-cost">
-                Deployment Cost
-              </label>
-              <input
-                id="deployment-cost"
-                type="number"
-                className="form-input"
-                min="0"
-                step="1000"
-                value={config.deploymentCost ?? GPU_CONFIG_DEFAULTS.deploymentCost}
-                onChange={(e) => setConfig({ ...config, deploymentCost: parseFloat(e.target.value) || 0 })}
-              />
-              <div className="form-hint">CAD (racks/infra)</div>
-            </div>
+            <FormInput
+              id="deployment-cost"
+              label="Deployment Cost"
+              value={config.deploymentCost ?? GPU_CONFIG_DEFAULTS.deploymentCost}
+              onChange={(val) => setConfig({ ...config, deploymentCost: val ?? 0 })}
+              unit="CAD"
+              min="0"
+              step="1000"
+              hint="racks/infra"
+            />
           </div>
         </div>
       )}

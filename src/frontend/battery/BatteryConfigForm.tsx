@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { BatteryConfig } from "./types";
 import { BATTERY_PRESETS, calculateBatterySize, getBatteryDerivedMetrics } from "./types";
+import { FormInput } from "@/frontend/ui/forms/FormInput";
 
 interface BatteryConfigFormProps {
   config: BatteryConfig;
@@ -77,38 +78,29 @@ export function BatteryConfigForm({ config, onChange, totalComputePowerMW }: Bat
 
           {/* Basic Settings */}
           <div className="form-grid">
-            <div className="form-group">
-              <label className="form-label" htmlFor="battery-size">
-                Battery Size (MWh) <span style={{ color: "#dc2626" }}>*</span>
-              </label>
-              <input
-                id="battery-size"
-                type="number"
-                className="form-input"
-                min="0.1"
-                step="0.1"
-                value={config.batterySize}
-                onChange={(e) => onChange({ ...config, batterySize: parseFloat(e.target.value) || 0 })}
-                disabled={config.preset !== 'custom'}
-              />
-            </div>
+            <FormInput
+              id="battery-size"
+              label="Battery Size"
+              value={config.batterySize}
+              onChange={(val) => onChange({ ...config, batterySize: val ?? 0 })}
+              unit="MWh"
+              min="0.1"
+              step="0.1"
+              required
+              disabled={config.preset !== 'custom'}
+            />
 
-            <div className="form-group">
-              <label className="form-label" htmlFor="battery-power">
-                Battery Power (MW)
-              </label>
-              <input
-                id="battery-power"
-                type="number"
-                className="form-input"
-                min="0.1"
-                step="0.1"
-                value={config.batteryPower ?? ''}
-                onChange={(e) => onChange({ ...config, batteryPower: e.target.value ? parseFloat(e.target.value) : null })}
-                placeholder={`Default: ${totalComputePowerMW.toFixed(1)} MW`}
-              />
-              <div className="form-hint">Leave blank to use total compute power</div>
-            </div>
+            <FormInput
+              id="battery-power"
+              label="Battery Power"
+              value={config.batteryPower ?? ''}
+              onChange={(val) => onChange({ ...config, batteryPower: val })}
+              unit="MW"
+              min="0.1"
+              step="0.1"
+              placeholder={`Default: ${totalComputePowerMW.toFixed(1)} MW`}
+              hint="Leave blank to use total compute power"
+            />
           </div>
 
           {/* Advanced Settings Toggle */}
@@ -121,81 +113,56 @@ export function BatteryConfigForm({ config, onChange, totalComputePowerMW }: Bat
           {showAdvanced && (
             <div className="form-section">
               <div className="form-grid">
-                <div className="form-group">
-                  <label className="form-label" htmlFor="round-trip-efficiency">
-                    Round-trip Efficiency (%)
-                  </label>
-                  <input
-                    id="round-trip-efficiency"
-                    type="number"
-                    className="form-input"
-                    min="0"
-                    max="100"
-                    step="1"
-                    value={config.roundTripEfficiency}
-                    onChange={(e) => onChange({ ...config, roundTripEfficiency: parseFloat(e.target.value) || 0 })}
-                  />
-                </div>
+                <FormInput
+                  id="round-trip-efficiency"
+                  label="Round-trip Efficiency"
+                  value={config.roundTripEfficiency}
+                  onChange={(val) => onChange({ ...config, roundTripEfficiency: val ?? 0 })}
+                  unit="%"
+                  min="0"
+                  max="100"
+                  step="1"
+                />
 
-                <div className="form-group">
-                  <label className="form-label" htmlFor="battery-lifetime">
-                    Battery Lifetime (years)
-                  </label>
-                  <input
-                    id="battery-lifetime"
-                    type="number"
-                    className="form-input"
-                    min="1"
-                    step="1"
-                    value={config.batteryLifetime}
-                    onChange={(e) => onChange({ ...config, batteryLifetime: parseInt(e.target.value) || 12 })}
-                  />
-                </div>
+                <FormInput
+                  id="battery-lifetime"
+                  label="Battery Lifetime"
+                  value={config.batteryLifetime}
+                  onChange={(val) => onChange({ ...config, batteryLifetime: val ?? 12 })}
+                  unit="years"
+                  min="1"
+                  step="1"
+                />
 
-                <div className="form-group">
-                  <label className="form-label" htmlFor="battery-energy-cost">
-                    Battery Energy Cost (CAD/kWh)
-                  </label>
-                  <input
-                    id="battery-energy-cost"
-                    type="number"
-                    className="form-input"
-                    min="0"
-                    step="1"
-                    value={config.batteryEnergyCost}
-                    onChange={(e) => onChange({ ...config, batteryEnergyCost: parseFloat(e.target.value) || 0 })}
-                  />
-                </div>
+                <FormInput
+                  id="battery-energy-cost"
+                  label="Battery Energy Cost"
+                  value={config.batteryEnergyCost}
+                  onChange={(val) => onChange({ ...config, batteryEnergyCost: val ?? 0 })}
+                  unit="CAD/kWh"
+                  min="0"
+                  step="1"
+                />
 
-                <div className="form-group">
-                  <label className="form-label" htmlFor="battery-power-cost">
-                    Battery Power-System Cost (CAD/kW)
-                  </label>
-                  <input
-                    id="battery-power-cost"
-                    type="number"
-                    className="form-input"
-                    min="0"
-                    step="1"
-                    value={config.batteryPowerSystemCost}
-                    onChange={(e) => onChange({ ...config, batteryPowerSystemCost: parseFloat(e.target.value) || 0 })}
-                  />
-                </div>
+                <FormInput
+                  id="battery-power-cost"
+                  label="Battery Power-System Cost"
+                  value={config.batteryPowerSystemCost}
+                  onChange={(val) => onChange({ ...config, batteryPowerSystemCost: val ?? 0 })}
+                  unit="CAD/kW"
+                  min="0"
+                  step="1"
+                />
 
-                <div className="form-group">
-                  <label className="form-label" htmlFor="battery-om">
-                    Fixed Annual O&M (CAD/year)
-                  </label>
-                  <input
-                    id="battery-om"
-                    type="number"
-                    className="form-input"
-                    min="0"
-                    step="1000"
-                    value={config.fixedAnnualOM}
-                    onChange={(e) => onChange({ ...config, fixedAnnualOM: parseFloat(e.target.value) || 0 })}
-                  />
-                </div>
+                <FormInput
+                  id="battery-om"
+                  label="Fixed Annual O&M"
+                  value={config.fixedAnnualOM}
+                  onChange={(val) => onChange({ ...config, fixedAnnualOM: val ?? 0 })}
+                  unit="CAD/year"
+                  min="0"
+                  step="1000"
+                />
               </div>
             </div>
           )}
