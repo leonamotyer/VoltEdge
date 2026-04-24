@@ -50,18 +50,18 @@ export default function NetworkAndFiberPage() {
             </KpiGrid>
             <PanelBento>
               <section className="panel panel--chart">
-                <h4>Latency vs Thresholds</h4>
+                <h3>Latency vs Thresholds</h3>
                 <SimpleBarChart data={thresholdData} xKey="name" yKey="latencyMs" color={CHART_BLUE} />
               </section>
             </PanelBento>
             {"rawDataByRepository" in data && data.rawDataByRepository ? (
               <section className="panel panel--data">
-                <h4>Raw inputs by repository (`aeso/`, `turbine/`, `scada/`)</h4>
+                <h3>Raw inputs by repository (`aeso/`, `turbine/`, `scada/`)</h3>
                 <pre>{JSON.stringify(data.rawDataByRepository, null, 2)}</pre>
               </section>
             ) : null}
             <section className="panel panel--data">
-              <h4>Computed scenario</h4>
+              <h3>Computed scenario</h3>
               <pre>
                 {JSON.stringify(
                   {

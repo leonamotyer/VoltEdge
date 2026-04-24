@@ -69,7 +69,7 @@ export default function CurtailmentPage() {
             </KpiGrid>
             <PanelBento>
               <section className="panel panel--chart">
-                <h4>Hourly Curtailment Gap</h4>
+                <h3>Hourly Curtailment Gap</h3>
                 <SimpleLineChart data={hourlyData} xKey="timestamp" yKey="gapMWh" color={CHART_BLUE} />
               </section>
               <section className="panel panel--chart panel--span-full">
