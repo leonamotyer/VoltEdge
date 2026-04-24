@@ -27,26 +27,7 @@ app.add_middleware(
 )
 
 
-@app.get("/")
-async def root():
-    """Health check endpoint."""
-    return {
-        "status": "ok",
-        "service": "voltEdge API",
-        "version": "1.0.0"
-    }
 
-
-@app.get("/health")
-async def health():
-    """Detailed health check."""
-    return {
-        "status": "healthy",
-        "checks": {
-            "api": "ok",
-            "repositories": "ok"
-        }
-    }
 
 
 # Register API routers
