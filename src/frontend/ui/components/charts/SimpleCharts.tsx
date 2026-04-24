@@ -33,6 +33,15 @@ export function SimpleLineChart({
   const compact = useIsCompactCharts();
   const chartHeight = compact ? 200 : 240;
 
+  // Check if data is empty
+  if (!data || data.length === 0) {
+    return (
+      <div className="chart-box" style={{ minHeight: chartHeight, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ color: '#9ca3af', fontSize: '0.875rem' }}>No data available</p>
+      </div>
+    );
+  }
+
   return (
     <div className="chart-box">
       <ResponsiveContainer width="100%" height={chartHeight}>
@@ -74,6 +83,15 @@ export function SimpleGroupedBarChart({
 }) {
   const compact = useIsCompactCharts();
   const chartHeight = compact ? 220 : 260;
+
+  // Check if data is empty
+  if (!data || data.length === 0) {
+    return (
+      <div className="chart-box" style={{ minHeight: chartHeight, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ color: '#9ca3af', fontSize: '0.875rem' }}>No data available</p>
+      </div>
+    );
+  }
 
   return (
     <div className="chart-box">
@@ -131,6 +149,15 @@ export function SimpleBarChart({
   const compact = useIsCompactCharts();
   const chartHeight = compact ? 200 : 240;
 
+  // Check if data is empty
+  if (!data || data.length === 0) {
+    return (
+      <div className="chart-box" style={{ minHeight: chartHeight, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ color: '#9ca3af', fontSize: '0.875rem' }}>No data available</p>
+      </div>
+    );
+  }
+
   return (
     <div className="chart-box">
       <ResponsiveContainer width="100%" height={chartHeight}>
@@ -168,6 +195,15 @@ export function SimplePieChart({
   const colors = [...CHART_PIE_COLORS];
   const compact = useIsCompactCharts();
   const chartHeight = compact ? 200 : 240;
+
+  // Check if data is empty
+  if (!data || data.length === 0) {
+    return (
+      <div className="chart-box" style={{ minHeight: chartHeight, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ color: '#9ca3af', fontSize: '0.875rem' }}>No data available</p>
+      </div>
+    );
+  }
 
   return (
     <div className="chart-box">
@@ -221,6 +257,15 @@ export function BatteryPowerVsPriceChart({
 }) {
   const compact = useIsCompactCharts();
   const chartHeight = compact ? 220 : 260;
+
+  // Check if data is empty
+  if (!data || data.length === 0) {
+    return (
+      <div className="chart-box" style={{ minHeight: chartHeight, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ color: '#9ca3af', fontSize: '0.875rem' }}>No data available</p>
+      </div>
+    );
+  }
 
   // Format timestamp for display
   const formattedData = data.map((d) => {

@@ -240,7 +240,7 @@ export function GpuConfigForm({ onConfigChange }: GpuConfigFormProps) {
 
       {/* Derived Metrics */}
       <div className="metrics-panel">
-        <h4>Derived Metrics</h4>
+        <h3>Derived Metrics</h3>
         <div className="metric-row">
           <span className="metric-label">Total Compute Power</span>
           <span className="metric-value">{metrics.totalComputePowerMw.toFixed(3)} MW</span>

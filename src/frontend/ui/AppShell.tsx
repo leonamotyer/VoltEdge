@@ -92,9 +92,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   investor view.
                 </p>
               </div>
-              <TabNav />
             </div>
           </header>
+          <TabNav />
           <div id="main-content" className="content-main" tabIndex={-1}>
             {children}
           </div>

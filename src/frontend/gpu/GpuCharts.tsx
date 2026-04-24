@@ -7,9 +7,15 @@ import { CHART_BLUE, CHART_GREEN, CHART_ORANGE } from "@/frontend/ui/chartTheme"
 
 interface GpuChartsProps {
   config: GpuConfig;
+  energyMix?: {
+    curtailedWindMWh: number;
+    batteryDischargeMWh: number;
+    gridImportMWh: number;
+    btfMWh: number;
+  };
 }
 
-export function GpuCharts({ config }: GpuChartsProps) {
+export function GpuCharts({ config, energyMix }: GpuChartsProps) {
   // Extract values with defaults
   const numberOfGpus = config.numberOfGpus;
   const rentalPricePerHour = config.rentalPricePerHour;
@@ -43,12 +49,6 @@ export function GpuCharts({ config }: GpuChartsProps) {
     { name: "Deployment", value: Math.round(deploymentCost) },
   ].filter((item) => item.value > 0);
 
-  // 3. Monthly Revenue Projection (12 months)
-  const monthlyRevenueData = Array.from({ length: 12 }, (_, i) => ({
-    month: new Date(0, i).toLocaleString("default", { month: "short" }),
-    revenue: Math.round(monthlyRevenue),
-  }));
-
   // Show message if config is incomplete
   if (numberOfGpus === 0 || rentalPricePerHour === 0) {
     return (
@@ -63,11 +63,12 @@ export function GpuCharts({ config }: GpuChartsProps) {
       <style jsx>{`
         .gpu-charts {
           display: grid;
-          gap: 1.5rem;
+          gap: 1rem;
         }
         @media (min-width: 900px) {
           .gpu-charts {
             grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1.5rem;
           }
           .gpu-charts > .chart-full {
             grid-column: 1 / -1;
@@ -75,11 +76,32 @@ export function GpuCharts({ config }: GpuChartsProps) {
         }
         .chart-panel {
           background: white;
-          border-radius: 18px;
+          border-radius: 16px;
           border: 1px solid rgba(26, 58, 82, 0.1);
-          padding: 1.25rem;
+          padding: 0;
           box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04), 0 20px 44px -24px rgba(26, 58, 82, 0.14);
           position: relative;
+          overflow: hidden;
+        }
+        @media (min-width: 900px) {
+          .chart-panel {
+            border-radius: 18px;
+          }
+        }
+        .chart-panel h4 {
+          padding: clamp(1rem, 3vw, 1.25rem) clamp(1rem, 3vw, 1.25rem) 0.5rem clamp(1rem, 3vw, 1.25rem);
+          margin: 0 0 0.75rem 0;
+          color: #1a3050;
+          font-size: clamp(0.9rem, 2.5vw, 0.95rem);
+          font-weight: 600;
+          letter-spacing: -0.015em;
+        }
+        .chart-description {
+          padding: 0 clamp(1rem, 3vw, 1.25rem) 0.5rem clamp(1rem, 3vw, 1.25rem);
+          margin: 0;
+          font-size: clamp(0.8rem, 2vw, 0.875rem);
+          color: #64748b;
+          line-height: 1.5;
         }
         .chart-panel::before {
           content: "";
@@ -88,44 +110,54 @@ export function GpuCharts({ config }: GpuChartsProps) {
           left: 0;
           right: 0;
           height: 3px;
-          border-radius: 18px 18px 0 0;
+          z-index: 1;
+          border-radius: 16px 16px 0 0;
           background: linear-gradient(90deg, #1a3a52, #6eb89a, #c05621);
           opacity: 0.9;
         }
-        .chart-panel h4 {
-          margin: 0 0 1rem 0;
-          color: #1a3050;
-          font-size: 0.95rem;
-          font-weight: 600;
-          letter-spacing: -0.015em;
+        @media (min-width: 900px) {
+          .chart-panel::before {
+            border-radius: 18px 18px 0 0;
+          }
         }
         .metrics-summary {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-          gap: 0.75rem;
-          margin-bottom: 1.25rem;
-          padding: 1rem;
+          grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+          gap: 0.65rem;
+          margin-bottom: 1rem;
+          padding: clamp(0.875rem, 2.5vw, 1rem);
           background: linear-gradient(135deg, rgba(110, 184, 154, 0.08), rgba(37, 99, 235, 0.06));
           border-radius: 12px;
         }
+        @media (min-width: 900px) {
+          .metrics-summary {
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+          }
+        }
         .metric-item {
           text-align: center;
+          min-width: 0;
         }
         .metric-label {
-          font-size: 0.75rem;
+          font-size: clamp(0.65rem, 1.8vw, 0.75rem);
           color: #6b7280;
           text-transform: uppercase;
           letter-spacing: 0.05em;
           margin-bottom: 0.25rem;
+          word-break: break-word;
         }
         .metric-value {
-          font-size: 1.25rem;
+          font-size: clamp(1.1rem, 3.5vw, 1.25rem);
           font-weight: 700;
           color: #1a3050;
+          line-height: 1.2;
         }
         .metric-sub {
-          font-size: 0.75rem;
+          font-size: clamp(0.7rem, 1.8vw, 0.75rem);
           color: #9ca3af;
+          word-break: break-word;
         }
       `}</style>
 
@@ -153,6 +185,22 @@ export function GpuCharts({ config }: GpuChartsProps) {
         </div>
       </div>
 
+      {/* Energy Source Mix - moved from battery section */}
+      {energyMix && (
+        <div className="chart-panel">
+          <h4>Energy Source Mix</h4>
+          <p className="chart-description">Sources used to power GPU load over simulation period</p>
+          <SimplePieChart
+            data={[
+              { name: "Curtailed Wind (Direct)", value: energyMix.curtailedWindMWh },
+              { name: "Battery Discharge", value: energyMix.batteryDischargeMWh },
+              { name: "Grid Import", value: energyMix.gridImportMWh },
+              ...(energyMix.btfMWh > 0 ? [{ name: "BTF", value: energyMix.btfMWh }] : []),
+            ]}
+          />
+        </div>
+      )}
+
       {/* CAPEX Breakdown */}
       {capexBreakdown.length > 0 && (
         <div className="chart-panel">
@@ -160,12 +208,6 @@ export function GpuCharts({ config }: GpuChartsProps) {
           <SimplePieChart data={capexBreakdown} />
         </div>
       )}
-
-      {/* Monthly Revenue */}
-      <div className="chart-panel">
-        <h4>Estimated Monthly Revenue</h4>
-        <SimpleBarChart data={monthlyRevenueData} xKey="month" yKey="revenue" color={CHART_BLUE} />
-      </div>
     </div>
   );
 }

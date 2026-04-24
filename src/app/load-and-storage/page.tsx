@@ -7,7 +7,7 @@ import { PanelBento } from "@/frontend/components/PanelBento";
 import { KpiCard } from "@/frontend/ui/components/KpiCard";
 import { isLoadAndStorageData } from "@/frontend/dashboard/guards";
 import { GpuCharts } from "@/frontend/gpu/GpuCharts";
-import { SimpleLineChart, SimplePieChart, BatteryPowerVsPriceChart } from "@/frontend/ui/components/charts/SimpleCharts";
+import { SimpleLineChart, BatteryPowerVsPriceChart } from "@/frontend/ui/components/charts/SimpleCharts";
 import { CHART_GREEN, CHART_BLUE, CHART_ORANGE } from "@/frontend/ui/chartTheme";
 import { loadLoadAndStoragePageData } from "./data";
 import { useConfig } from "@/frontend/context/ConfigContext";
@@ -28,18 +28,18 @@ export default function LoadAndStoragePage() {
         >
           {/* GPU Charts - shown when config is set from sidebar */}
           {gpuConfig && (
-            <section style={{ marginBottom: "2rem" }}>
+            <section style={{ marginBottom: "clamp(1.5rem, 4vw, 2rem)" }}>
               <h3
                 style={{
-                  fontSize: "1.125rem",
+                  fontSize: "clamp(1rem, 2.8vw, 1.125rem)",
                   fontWeight: 600,
                   color: "#1a3050",
-                  marginBottom: "1rem",
+                  marginBottom: "clamp(0.75rem, 2vw, 1rem)",
                 }}
               >
                 GPU Revenue Simulation
               </h3>
-              <GpuCharts config={gpuConfig} />
+              <GpuCharts config={gpuConfig} energyMix={data.energyMix} />
             </section>
           )}
 
@@ -47,10 +47,10 @@ export default function LoadAndStoragePage() {
           <section>
             <h3
               style={{
-                fontSize: "1.125rem",
+                fontSize: "clamp(1rem, 2.8vw, 1.125rem)",
                 fontWeight: 600,
                 color: "#1a3050",
-                marginBottom: "1rem",
+                marginBottom: "clamp(0.75rem, 2vw, 1rem)",
               }}
             >
               Battery Storage Simulation
@@ -79,7 +79,7 @@ export default function LoadAndStoragePage() {
             </KpiGrid>
             <PanelBento>
               <section className="panel panel--chart panel--span-full">
-                <h4>Battery State of Charge (48h)</h4>
+                <h3>Battery State of Charge (48h)</h3>
                 <SimpleLineChart
                   data={data.socTimeSeries.map((row) => ({
                     time: new Date(row.timestamp).toLocaleString("en-US", {
@@ -95,8 +95,14 @@ export default function LoadAndStoragePage() {
                 />
               </section>
               <section className="panel panel--chart panel--span-full">
-                <h4>Charge/Discharge Cycles vs Pool Price</h4>
-                <p style={{ fontSize: "0.875rem", color: "#64748b", marginBottom: "0.75rem" }}>
+                <h3>Charge/Discharge Cycles vs Pool Price</h3>
+                <p style={{
+                  fontSize: "clamp(0.8rem, 2vw, 0.875rem)",
+                  color: "#64748b",
+                  marginBottom: "clamp(0.5rem, 1.5vw, 0.75rem)",
+                  padding: "0 clamp(1rem, 3vw, 1.25rem)",
+                  lineHeight: "1.5"
+                }}>
                   Battery charges during low/negative prices (curtailment) and discharges during high prices
                 </p>
                 <BatteryPowerVsPriceChart
@@ -104,22 +110,6 @@ export default function LoadAndStoragePage() {
                   chargeColor={CHART_GREEN}
                   dischargeColor={CHART_BLUE}
                   priceColor={CHART_ORANGE}
-                />
-              </section>
-              <section className="panel panel--chart">
-                <h4>Energy Source Mix</h4>
-                <p style={{ fontSize: "0.875rem", color: "#64748b", marginBottom: "0.75rem" }}>
-                  Sources used to power GPU load over simulation period
-                </p>
-                <SimplePieChart
-                  data={[
-                    { name: "Curtailed Wind (Direct)", value: data.energyMix.curtailedWindMWh },
-                    { name: "Battery Discharge", value: data.energyMix.batteryDischargeMWh },
-                    { name: "Grid Import", value: data.energyMix.gridImportMWh },
-                    ...(data.energyMix.btfMWh > 0
-                      ? [{ name: "BTF", value: data.energyMix.btfMWh }]
-                      : []),
-                  ]}
                 />
               </section>
             </PanelBento>
