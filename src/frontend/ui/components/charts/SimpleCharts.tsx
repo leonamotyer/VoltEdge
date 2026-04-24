@@ -5,6 +5,7 @@ import {
   BarChart,
   CartesianGrid,
   Cell,
+  ComposedChart,
   Legend,
   Line,
   LineChart,
@@ -31,6 +32,15 @@ export function SimpleLineChart({
 }) {
   const compact = useIsCompactCharts();
   const chartHeight = compact ? 200 : 240;
+
+  // Check if data is empty
+  if (!data || data.length === 0) {
+    return (
+      <div className="chart-box" style={{ minHeight: chartHeight, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ color: '#9ca3af', fontSize: '0.875rem' }}>No data available</p>
+      </div>
+    );
+  }
 
   return (
     <div className="chart-box">
@@ -73,6 +83,15 @@ export function SimpleGroupedBarChart({
 }) {
   const compact = useIsCompactCharts();
   const chartHeight = compact ? 220 : 260;
+
+  // Check if data is empty
+  if (!data || data.length === 0) {
+    return (
+      <div className="chart-box" style={{ minHeight: chartHeight, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ color: '#9ca3af', fontSize: '0.875rem' }}>No data available</p>
+      </div>
+    );
+  }
 
   return (
     <div className="chart-box">
@@ -130,6 +149,15 @@ export function SimpleBarChart({
   const compact = useIsCompactCharts();
   const chartHeight = compact ? 200 : 240;
 
+  // Check if data is empty
+  if (!data || data.length === 0) {
+    return (
+      <div className="chart-box" style={{ minHeight: chartHeight, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ color: '#9ca3af', fontSize: '0.875rem' }}>No data available</p>
+      </div>
+    );
+  }
+
   return (
     <div className="chart-box">
       <ResponsiveContainer width="100%" height={chartHeight}>
@@ -168,6 +196,15 @@ export function SimplePieChart({
   const compact = useIsCompactCharts();
   const chartHeight = compact ? 200 : 240;
 
+  // Check if data is empty
+  if (!data || data.length === 0) {
+    return (
+      <div className="chart-box" style={{ minHeight: chartHeight, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ color: '#9ca3af', fontSize: '0.875rem' }}>No data available</p>
+      </div>
+    );
+  }
+
   return (
     <div className="chart-box">
       <ResponsiveContainer width="100%" height={chartHeight}>
@@ -192,6 +229,146 @@ export function SimplePieChart({
             ))}
           </Pie>
         </PieChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+/**
+ * Dual-axis chart for battery charge/discharge power vs pool price
+ * - Left Y-axis: Power in MW (charge and discharge)
+ * - Right Y-axis: Pool price in CAD/MWh
+ */
+export function BatteryPowerVsPriceChart({
+  data,
+  chargeColor,
+  dischargeColor,
+  priceColor,
+}: {
+  data: Array<{
+    timestamp: string;
+    chargeMw: number;
+    dischargeMw: number;
+    poolPrice: number;
+  }>;
+  chargeColor: string;
+  dischargeColor: string;
+  priceColor: string;
+}) {
+  const compact = useIsCompactCharts();
+  const chartHeight = compact ? 220 : 260;
+
+  // Check if data is empty
+  if (!data || data.length === 0) {
+    return (
+      <div className="chart-box" style={{ minHeight: chartHeight, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ color: '#9ca3af', fontSize: '0.875rem' }}>No data available</p>
+      </div>
+    );
+  }
+
+  // Format timestamp for display
+  const formattedData = data.map((d) => {
+    const date = new Date(d.timestamp);
+    const hour = date.getHours();
+    const day = date.getDate();
+    return {
+      ...d,
+      displayTime: `D${day} ${hour.toString().padStart(2, "0")}:00`,
+    };
+  });
+
+  return (
+    <div className="chart-box">
+      <ResponsiveContainer width="100%" height={chartHeight}>
+        <ComposedChart
+          data={formattedData}
+          margin={{ left: compact ? 0 : 4, right: compact ? 0 : 4, bottom: compact ? 8 : 4 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" stroke={CHART_GRID} vertical={false} />
+          <XAxis
+            dataKey="displayTime"
+            tick={{ fontSize: compact ? 9 : 11 }}
+            angle={compact ? -45 : -35}
+            textAnchor="end"
+            height={compact ? 58 : 52}
+            interval={compact ? 5 : 3}
+          />
+          {/* Left Y-axis for power (MW) */}
+          <YAxis
+            yAxisId="power"
+            tick={{ fontSize: compact ? 10 : 12 }}
+            width={compact ? 38 : 46}
+            label={{
+              value: "Power (MW)",
+              angle: -90,
+              position: "insideLeft",
+              style: { fontSize: compact ? 10 : 11, fill: "#6b7280" },
+            }}
+          />
+          {/* Right Y-axis for price (CAD/MWh) */}
+          <YAxis
+            yAxisId="price"
+            orientation="right"
+            tick={{ fontSize: compact ? 10 : 12 }}
+            width={compact ? 42 : 50}
+            label={{
+              value: "Pool Price (CAD/MWh)",
+              angle: 90,
+              position: "insideRight",
+              style: { fontSize: compact ? 10 : 11, fill: "#6b7280" },
+            }}
+          />
+          <Tooltip
+            contentStyle={{
+              fontSize: compact ? 11 : 12,
+              borderRadius: 10,
+              border: "1px solid #e2e8f0",
+              boxShadow: "0 4px 14px rgba(15, 23, 42, 0.08)",
+            }}
+            formatter={(value, name) => {
+              const numValue = typeof value === "number" ? value : 0;
+              if (name === "chargeMw") return [`${numValue.toFixed(2)} MW`, "Charge"];
+              if (name === "dischargeMw") return [`${numValue.toFixed(2)} MW`, "Discharge"];
+              if (name === "poolPrice") return [`${numValue.toFixed(2)} CAD/MWh`, "Pool Price"];
+              return [value, name];
+            }}
+          />
+          <Legend
+            wrapperStyle={{ fontSize: compact ? 10 : 11, paddingTop: 8 }}
+            formatter={(value) => {
+              if (value === "chargeMw") return "Charge (MW)";
+              if (value === "dischargeMw") return "Discharge (MW)";
+              if (value === "poolPrice") return "Pool Price (CAD/MWh)";
+              return value;
+            }}
+          />
+          {/* Charge power as bars */}
+          <Bar
+            yAxisId="power"
+            dataKey="chargeMw"
+            fill={chargeColor}
+            radius={[3, 3, 0, 0]}
+            maxBarSize={compact ? 18 : 24}
+          />
+          {/* Discharge power as bars */}
+          <Bar
+            yAxisId="power"
+            dataKey="dischargeMw"
+            fill={dischargeColor}
+            radius={[3, 3, 0, 0]}
+            maxBarSize={compact ? 18 : 24}
+          />
+          {/* Pool price as line on right axis */}
+          <Line
+            yAxisId="price"
+            type="monotone"
+            dataKey="poolPrice"
+            stroke={priceColor}
+            strokeWidth={2.5}
+            dot={false}
+          />
+        </ComposedChart>
       </ResponsiveContainer>
     </div>
   );

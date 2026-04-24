@@ -54,7 +54,7 @@ export default function RoiPage() {
       </KpiGrid>
       <PanelBento>
         <section className="panel panel--chart">
-          <h4>CAPEX breakdown (demo)</h4>
+          <h3>CAPEX breakdown (demo)</h3>
           <SimplePieChart data={capexMix} />
         </section>
         <section className="panel panel--chart panel--span-full">

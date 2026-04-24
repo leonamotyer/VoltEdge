@@ -7,39 +7,38 @@ from typing import Any
 from pydantic import BaseModel, Field
 
 
-# Constants (from mockup.py lines 61-66)
-USD_TO_CAD = 1.38
+# Constants - All values in CAD (from mockup.py lines 61-66)
 GPUS_PER_RACK = 8
-RACK_PRICE_CAD = 8_000 * USD_TO_CAD
-BATT_COST_PER_KWH = 220 * USD_TO_CAD  # energy component $/kWh
-BATT_COST_PER_KW = 130 * USD_TO_CAD   # power / PCS $/kW
-FIXED_OM_FRAC = 0.05                  # 5% of CAPEX/yr
+RACK_PRICE_CAD = 8_000  # CAD per rack
+BATT_COST_PER_KWH = 220  # CAD/kWh (energy component)
+BATT_COST_PER_KW = 130   # CAD/kW (power/PCS component)
+FIXED_OM_FRAC = 0.05     # 5% of CAPEX/yr
 
 
-# GPU specifications (from mockup.py lines 68-73)
+# GPU specifications - All prices in CAD (from mockup.py lines 68-73)
 GPU_SPECS = {
     "RTX 3090": {
         "power_kw": 0.350,
-        "unit_price_cad": 900 * USD_TO_CAD,
-        "rental_hr_cad": 0.13 * USD_TO_CAD,
+        "unit_price_cad": 900,  # CAD
+        "rental_hr_cad": 0.13,  # CAD/hr
         "label": "RTX 3090 (Entry / Inference)"
     },
     "RTX 5090": {
-        "power_kw": 0.575,
-        "unit_price_cad": 5_000,
-        "rental_hr_cad": 0.37 * USD_TO_CAD,
+        "power_kw": 0.58,
+        "unit_price_cad": 2_000,  # CAD
+        "rental_hr_cad": 0.37,  # CAD/hr
         "label": "RTX 5090 (Mid-tier / AI)"
     },
     "A6000": {
         "power_kw": 0.300,
-        "unit_price_cad": 6_000 * USD_TO_CAD,
-        "rental_hr_cad": 0.37 * USD_TO_CAD,
+        "unit_price_cad": 6_000,  # CAD
+        "rental_hr_cad": 0.37,  # CAD/hr
         "label": "A6000 (Pro / Data Science)"
     },
     "PRO 6000": {
         "power_kw": 0.600,
-        "unit_price_cad": 15_000,
-        "rental_hr_cad": 0.80 * USD_TO_CAD,
+        "unit_price_cad": 8_000,  # CAD
+        "rental_hr_cad": 0.80,  # CAD/hr
         "label": "PRO 6000 (High-perf / LLM)"
     },
 }
