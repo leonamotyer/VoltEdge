@@ -1180,7 +1180,7 @@ input[type="number"]:hover::-webkit-outer-spin-button {
 
 .form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 1rem;
 }
 
