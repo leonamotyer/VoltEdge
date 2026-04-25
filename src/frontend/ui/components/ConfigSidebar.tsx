@@ -44,7 +44,7 @@ export function ConfigSidebar() {
 
         {/* Grid Supply Configuration */}
         <section className="config-section">
-          <h3 className="config-section-title">Grid Supply</h3>
+          <h3 className="config-section-title">Grid &amp; BTF</h3>
           <GridSupplyConfigForm
             config={gridConfig}
             onChange={setGridConfig}

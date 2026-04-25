@@ -23,68 +23,62 @@ export function GridSupplyConfigForm({ config, onChange, totalComputePowerMW }: 
   return (
     <div className="config-form">
 
-      <h3>Basic Settings</h3>
-
-      {/* Grid Power Settings */}
       <FormInput
         id="gridPowerLimit"
-        label="Grid Power Limit"
+        label="Grid Import Cap"
         value={config.gridPowerLimit}
         onChange={(val) => handleUpdate({ gridPowerLimit: val ?? 0 })}
         unit="MW"
         min="0"
         step="0.1"
-        hint="Set to 0 to disable grid power"
+        hint="Max grid import (dispatch grid_cap). Set to 0 to disable grid."
       />
 
-      <FormInput
-        id="gridPriceOverride"
-        label="Grid Price Override"
-        value={config.gridPriceOverride ?? ''}
-        onChange={(val) => handleUpdate({ gridPriceOverride: val })}
-        unit="CAD/MWh, optional"
-        min="0"
-        step="1"
-        placeholder="Leave blank to use pool price time series"
-        hint="If blank, backend uses pool price time series"
-      />
-
-      {/* BTF Power Settings */}
       <FormInput
         id="btfPowerLimit"
-        label="BTF Power Limit"
+        label="BTF Supply Cap"
         value={config.btfPowerLimit}
         onChange={(val) => handleUpdate({ btfPowerLimit: val ?? 0 })}
         unit="MW"
         min="0"
         step="0.1"
-        hint="Set to 0 to disable BTF power"
+        hint="Max behind-the-fence / BTF delivery (dispatch btf_cap). Set to 0 to disable."
       />
 
-      {derived.btfEnabled && (
-        <FormInput
-          id="btfPrice"
-          label="BTF Price"
-          value={config.btfPrice}
-          onChange={(val) => handleUpdate({ btfPrice: val ?? 0 })}
-          unit="CAD/MWh"
-          min="0"
-          step="1"
-          required
-        />
-      )}
+      <FormInput
+        id="btfPrice"
+        label="BTF Price"
+        value={config.btfPrice}
+        onChange={(val) => handleUpdate({ btfPrice: val ?? 0 })}
+        unit="CAD/MWh"
+        min="0"
+        step="1"
+        disabled={!derived.btfEnabled}
+        hint={derived.btfEnabled ? "Price when drawing on BTF supply" : "Enable BTF Supply Cap (> 0) to set price"}
+      />
 
-      {/* Curtailment Value */}
       <FormInput
         id="curtailmentValue"
-        label="Curtailment Value"
+        label="Curtailment Price"
         value={config.curtailmentValue}
         onChange={(val) => handleUpdate({ curtailmentValue: val ?? 0 })}
         unit="CAD/MWh"
         min="0"
         step="1"
         required
-        hint="Required - typically much lower than grid/BTF price"
+        hint="Value of curtailed energy — typically well below grid/BTF price"
+      />
+
+      <FormInput
+        id="gridPriceOverride"
+        label="Grid Pool Price Override"
+        value={config.gridPriceOverride ?? ''}
+        onChange={(val) => handleUpdate({ gridPriceOverride: val })}
+        unit="CAD/MWh, optional"
+        min="0"
+        step="1"
+        placeholder="Leave blank for market pool time series"
+        hint="Optional — not in the Streamlit mockup; fixes pool price for what-if runs"
       />
 
       {/* Advanced Settings Toggle */}

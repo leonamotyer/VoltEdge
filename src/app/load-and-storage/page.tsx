@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useMemo } from "react";
 import { DataBoundPage } from "@/frontend/components/DataBoundPage";
 import { DashboardLayout } from "@/frontend/components/DashboardLayout";
 import { PanelBento } from "@/frontend/components/PanelBento";
@@ -16,9 +17,30 @@ import { ChargeDischargePriceChart } from "@/frontend/sections/load-storage/Char
 export default function LoadAndStoragePage() {
   const { gpuConfig, batteryConfig, gridConfig } = useConfig();
 
+  const totalComputePowerMw = useMemo(
+    () => (gpuConfig ? calculateGpuMetrics(gpuConfig).totalComputePowerMw : 0),
+    [gpuConfig],
+  );
+
+  const effectiveBatteryPowerMw = useMemo(() => {
+    if (!batteryConfig.includeBattery) return 0;
+    return batteryConfig.batteryPower ?? totalComputePowerMw;
+  }, [batteryConfig.includeBattery, batteryConfig.batteryPower, totalComputePowerMw]);
+
+  const loader = useCallback(
+    () =>
+      loadLoadAndStoragePageData({
+        batteryConfig,
+        gridConfig,
+        effectiveBatteryPowerMw,
+        totalComputePowerMw,
+      }),
+    [batteryConfig, gridConfig, effectiveBatteryPowerMw, totalComputePowerMw],
+  );
+
   return (
     <DataBoundPage
-      loader={loadLoadAndStoragePageData}
+      loader={loader}
       guard={isLoadAndStorageData}
       routeLabel="Load and Storage"
     >
@@ -130,18 +152,18 @@ export default function LoadAndStoragePage() {
                   : []),
                 // Grid Supply Configuration
                 {
-                  metric: "Grid Power Limit",
+                  metric: "Grid Import Cap",
                   value: gridConfig ? `${gridConfig.gridPowerLimit.toFixed(2)} MW` : "—",
                 },
                 {
-                  metric: "Grid Price Override",
+                  metric: "Grid Pool Price Override",
                   value:
                     gridConfig?.gridPriceOverride !== null && gridConfig.gridPriceOverride > 0
                       ? `$${gridConfig.gridPriceOverride.toFixed(2)} CAD/MWh`
                       : "Market price",
                 },
                 {
-                  metric: "Behind-the-Fence Power",
+                  metric: "BTF Supply Cap",
                   value: gridConfig ? `${gridConfig.btfPowerLimit.toFixed(2)} MW` : "—",
                 },
                 {
@@ -149,7 +171,7 @@ export default function LoadAndStoragePage() {
                   value: gridConfig ? `$${gridConfig.btfPrice.toFixed(2)} CAD/MWh` : "—",
                 },
                 {
-                  metric: "Curtailment Value",
+                  metric: "Curtailment Price",
                   value: gridConfig ? `$${gridConfig.curtailmentValue.toFixed(2)} CAD/MWh` : "—",
                 },
                 {

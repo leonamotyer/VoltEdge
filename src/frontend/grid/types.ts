@@ -6,8 +6,9 @@
 export type PriorityRule = 'cheapest_first' | 'grid_first' | 'btf_first';
 
 export interface GridSupplyConfig {
-  // Basic Settings
-  gridPowerLimit: number; // MW (0 = disabled)
+  // Basic Settings — names mirror mockup / backend `grid_cap_mw`, `btf_cap_mw`
+  /** Maximum grid import (MW). Mockup: "Grid Import Cap". 0 = grid supply off. */
+  gridPowerLimit: number;
   gridPriceOverride: number | null; // CAD/MWh (null = use pool price time series)
   btfPowerLimit: number; // MW (0 = disabled)
   btfPrice: number; // CAD/MWh
