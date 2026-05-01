@@ -2,9 +2,7 @@
 
 import { useState, useRef, type DragEvent, type ChangeEvent } from "react";
 import { useConfig } from "@/frontend/context/ConfigContext";
-import type { GpuConfig } from "@/frontend/gpu/types";
-import type { BatteryConfig } from "@/frontend/battery/types";
-import type { GridSupplyConfig } from "@/frontend/grid/types";
+import type { GpuConfig, BatteryConfig, GridSupplyConfig } from "@/frontend/types/config";
 
 interface UploadState {
   status: "idle" | "uploading" | "success" | "error";

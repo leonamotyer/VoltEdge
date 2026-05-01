@@ -3,6 +3,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:all": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\" --names \"NEXT,PYTHON\" --prefix-colors \"cyan,yellow\"",
+    "dev:frontend": "next dev",
+    "dev:backend": "pip install -q -r src/backend/calculations/requirements.txt && python -m uvicorn --app-dir src/backend calculations.main:app --reload --port 8001",
     "build": "next build",
     "start": "next start",
     "test": "vitest run",
@@ -20,6 +23,7 @@
     "@types/node": "^22.14.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "concurrently": "^9.1.2",
     "cross-env": "^10.1.0",
     "typescript": "^5.8.3",
     "vitest": "^3.1.1"
