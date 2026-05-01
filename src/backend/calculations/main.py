@@ -147,3 +147,102 @@ async def calculate_irr(cash_flows: list[float]) -> dict[str, float]:
         return {"irr": compute_irr(cash_flows)}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# DATA SOURCE MANAGEMENT ENDPOINTS
+# ─────────────────────────────────────────────────────────────────────────────
+
+# In-memory state for data source (could be replaced with file/database storage)
+_data_source_state = {
+    "source": "demo",  # "demo" or "uploaded"
+    "has_curtailment_upload": False,
+    "has_pool_price_upload": False,
+}
+
+
+@app.get("/api/upload/data-source")
+async def get_data_source():
+    """Get current data source configuration."""
+    return _data_source_state
+
+
+@app.post("/api/upload/toggle-source")
+async def toggle_data_source(request: dict[str, Any]):
+    """Toggle between demo and uploaded data source."""
+    source = request.get("source")
+    if source not in ["demo", "uploaded"]:
+        raise HTTPException(status_code=400, detail="Invalid source. Must be 'demo' or 'uploaded'")
+
+    _data_source_state["source"] = source
+    return {"status": "success", "source": source}
+
+
+@app.post("/api/upload/curtailment")
+async def upload_curtailment(file: Any):
+    """Upload curtailment Excel file."""
+    # For now, just mark as uploaded
+    # TODO: Implement actual file parsing and storage
+    _data_source_state["has_curtailment_upload"] = True
+    return {
+        "message": "Curtailment data uploaded successfully",
+        "status": "success"
+    }
+
+
+@app.post("/api/upload/pool-price")
+async def upload_pool_price(file: Any):
+    """Upload pool price CSV file."""
+    # For now, just mark as uploaded
+    # TODO: Implement actual file parsing and storage
+    _data_source_state["has_pool_price_upload"] = True
+    return {
+        "message": "Pool price data uploaded successfully",
+        "status": "success"
+    }
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ECONOMICS AND SENSITIVITY ANALYSIS ENDPOINTS
+# ─────────────────────────────────────────────────────────────────────────────
+
+@app.post("/api/economics/marginal-costs")
+async def calculate_marginal_costs(request: dict[str, Any]) -> dict[str, Any]:
+    """
+    Calculate marginal cost analysis and arbitrage opportunities.
+
+    Returns:
+    - marginal_costs: Hourly marginal cost time-series by energy source
+    - arbitrage_hours: Filtered array of profitable arbitrage hours
+    - cost_distribution: Boxplot statistics by energy source
+    - summary: Overall metrics for the analysis period
+    """
+    # TODO: Implement actual marginal cost calculation
+    # For now, return mock data structure
+    return {
+        "marginal_costs": [],
+        "arbitrage_hours": [],
+        "cost_distribution": {},
+        "summary": {
+            "total_hours": 0,
+            "avg_marginal_cost_$/mwh": 0,
+            "avg_pool_price_$/mwh": 0,
+            "avg_spread_$/mwh": 0,
+        }
+    }
+
+
+@app.post("/api/sensitivity/npv")
+async def calculate_sensitivity_npv(request: dict[str, Any]) -> dict[str, Any]:
+    """
+    Calculate NPV sensitivity analysis.
+
+    Returns baseline NPV/IRR and sensitivity data for various parameters.
+    """
+    # TODO: Implement actual sensitivity analysis
+    # For now, return mock data structure
+    return {
+        "baseline_npv": 0,
+        "baseline_irr": 0,
+        "sensitivities": []
+    }
