@@ -15,7 +15,7 @@ interface AnnualPnLChartProps {
 export function AnnualPnLChart({ data }: AnnualPnLChartProps) {
   return (
     <section className="panel panel--chart panel--span-full">
-      <h4>Annual P&amp;L lines (demo, $ CAD)</h4>
+      <h4>Annual P&amp;L (Year 1, $ CAD)</h4>
       <SimpleBarChart data={data} xKey="line" yKey="cad" color={CHART_BLUE} />
     </section>
   );

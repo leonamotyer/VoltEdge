@@ -1,7 +1,7 @@
 "use client";
 
-import type { GpuConfig } from "./types";
-import { GPU_CONFIG_DEFAULTS } from "./types";
+import type { GpuConfig } from "@/frontend/types/config";
+import { GPU_CONFIG_DEFAULTS } from "@/frontend/types/config";
 import { SimpleLineChart, SimplePieChart, SimpleBarChart } from "@/frontend/ui/components/charts/SimpleCharts";
 import { CHART_BLUE, CHART_GREEN, CHART_ORANGE } from "@/frontend/ui/chartTheme";
 

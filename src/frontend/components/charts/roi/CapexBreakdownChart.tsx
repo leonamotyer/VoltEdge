@@ -14,7 +14,7 @@ interface CapexBreakdownChartProps {
 export function CapexBreakdownChart({ data }: CapexBreakdownChartProps) {
   return (
     <section className="panel panel--chart">
-      <h3>CAPEX breakdown (demo)</h3>
+      <h3>CAPEX breakdown</h3>
       <SimplePieChart data={data} />
     </section>
   );

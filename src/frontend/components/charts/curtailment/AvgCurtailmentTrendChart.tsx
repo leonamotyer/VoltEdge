@@ -11,7 +11,7 @@ interface AvgCurtailmentTrendChartProps {
 export function AvgCurtailmentTrendChart({ data }: AvgCurtailmentTrendChartProps) {
   return (
     <section className="panel panel--chart">
-      <h4>Average curtailment trend (mock — MWh per hour by month)</h4>
+      <h4>Average curtailment trend (MWh per hour by month)</h4>
       <SimpleLineChart
         data={data}
         xKey="label"

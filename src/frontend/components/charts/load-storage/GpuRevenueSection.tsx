@@ -1,5 +1,5 @@
-import { GpuCharts } from "@/frontend/gpu/GpuCharts";
-import type { GpuConfig } from "@/frontend/gpu/types";
+import { GpuCharts } from "@/frontend/components/charts/GpuCharts";
+import type { GpuConfig } from "@/frontend/types/config";
 
 interface GpuRevenueSectionProps {
   gpuConfig: GpuConfig | null;
