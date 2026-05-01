@@ -1,72 +1,84 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
-import { DataBoundPage } from "@/frontend/components/DataBoundPage";
+import { useMemo } from "react";
 import { DashboardLayout } from "@/frontend/components/DashboardLayout";
 import { PanelBento } from "@/frontend/components/PanelBento";
 import { KpiTable } from "@/frontend/ui/components/KpiTable";
-import { isLoadAndStorageData } from "@/frontend/dashboard/guards";
-import { loadLoadAndStoragePageData } from "./data";
 import { useConfig } from "@/frontend/context/ConfigContext";
-import { calculateGpuMetrics } from "@/frontend/gpu/types";
-import { GpuRevenueSection } from "@/frontend/sections/load-storage/GpuRevenueSection";
-import { BatteryStorageKpis } from "@/frontend/sections/load-storage/BatteryStorageKpis";
-import { BatteryStateOfChargeChart } from "@/frontend/sections/load-storage/BatteryStateOfChargeChart";
-import { ChargeDischargePriceChart } from "@/frontend/sections/load-storage/ChargeDischargePriceChart";
+import { calculateGpuMetrics } from "@/frontend/types/config";
+import { GpuRevenueSection } from "@/frontend/components/charts/load-storage/GpuRevenueSection";
+import { BatteryStorageKpis } from "@/frontend/components/charts/load-storage/BatteryStorageKpis";
+import { BatteryStateOfChargeChart } from "@/frontend/components/charts/load-storage/BatteryStateOfChargeChart";
+import { useDispatchSimulation } from "@/hooks/useDispatchSimulation";
 
 export default function LoadAndStoragePage() {
   const { gpuConfig, batteryConfig, gridConfig } = useConfig();
+
+  // Fetch real dispatch simulation data from backend
+  const { socTimeSeries, energyMix, loading, error } = useDispatchSimulation();
+
+  // Calculate KPI values from backend data
+  const capturedMWh = energyMix.curtailedWindMWh;
+  const releasedMWh = energyMix.batteryDischargeMWh;
+
+  // Estimate revenue based on battery discharge and typical arbitrage spread
+  const estimatedGrossRevenueCad = batteryConfig.includeBattery
+    ? Math.round(releasedMWh * 50) // Simplified: $50/MWh average spread
+    : 0;
 
   const totalComputePowerMw = useMemo(
     () => (gpuConfig ? calculateGpuMetrics(gpuConfig).totalComputePowerMw : 0),
     [gpuConfig],
   );
 
-  const effectiveBatteryPowerMw = useMemo(() => {
-    if (!batteryConfig.includeBattery) return 0;
-    return batteryConfig.batteryPower ?? totalComputePowerMw;
-  }, [batteryConfig.includeBattery, batteryConfig.batteryPower, totalComputePowerMw]);
+  if (loading) {
+    return (
+      <DashboardLayout
+        title="Load and Storage"
+        subtitle="GPU compute and battery storage simulation with curtailed wind energy"
+      >
+        <div style={{ padding: "2rem", textAlign: "center", color: "#64748b" }}>
+          Loading dispatch simulation data...
+        </div>
+      </DashboardLayout>
+    );
+  }
 
-  const loader = useCallback(
-    () =>
-      loadLoadAndStoragePageData({
-        batteryConfig,
-        gridConfig,
-        effectiveBatteryPowerMw,
-        totalComputePowerMw,
-      }),
-    [batteryConfig, gridConfig, effectiveBatteryPowerMw, totalComputePowerMw],
-  );
+  if (error) {
+    return (
+      <DashboardLayout
+        title="Load and Storage"
+        subtitle="GPU compute and battery storage simulation with curtailed wind energy"
+      >
+        <div style={{ padding: "2rem", color: "#ef4444" }}>
+          <strong>Error loading data:</strong> {error}
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   return (
-    <DataBoundPage
-      loader={loader}
-      guard={isLoadAndStorageData}
-      routeLabel="Load and Storage"
+    <DashboardLayout
+      title="Load and Storage"
+      subtitle="GPU compute and battery storage simulation with curtailed wind energy"
     >
-      {(data) => (
-        <DashboardLayout
-          title="Load and Storage"
-          subtitle="GPU compute and battery storage simulation with curtailed wind energy"
-        >
-          {/* GPU Revenue Section - conditional rendering handled inside component */}
-          <GpuRevenueSection gpuConfig={gpuConfig} energyMix={data.energyMix} />
+      {/* GPU Revenue Section - conditional rendering handled inside component */}
+      <GpuRevenueSection gpuConfig={gpuConfig} energyMix={energyMix} />
 
-          {/* Battery Storage KPIs */}
-          <BatteryStorageKpis
-            capturedMWh={data.capturedMWh}
-            releasedMWh={data.releasedMWh}
-            estimatedGrossRevenueCad={data.estimatedGrossRevenueCad}
-          />
+      {/* Battery Storage KPIs */}
+      <BatteryStorageKpis
+        capturedMWh={capturedMWh}
+        releasedMWh={releasedMWh}
+        estimatedGrossRevenueCad={estimatedGrossRevenueCad}
+      />
 
-          {/* Battery Charts */}
-          <PanelBento>
-            <BatteryStateOfChargeChart socTimeSeries={data.socTimeSeries} />
-            <ChargeDischargePriceChart chargeDischargeCycles={data.chargeDischargeCycles} />
-          </PanelBento>
+      {/* Battery Charts */}
+      <PanelBento>
+        <BatteryStateOfChargeChart socTimeSeries={socTimeSeries} />
+      </PanelBento>
 
-          {/* Key Performance Indicators Table */}
-          <section style={{ marginTop: "clamp(1.5rem, 4vw, 2rem)" }}>
+      {/* Key Performance Indicators Table */}
+      <section style={{ marginTop: "clamp(1.5rem, 4vw, 2rem)" }}>
             <KpiTable
               title="Key Performance Indicators"
               rows={[
@@ -194,8 +206,19 @@ export default function LoadAndStoragePage() {
             />
           </section>
 
-        </DashboardLayout>
-      )}
-    </DataBoundPage>
+          {/* Data Source Info */}
+          <div style={{ gridColumn: "span 12", fontSize: "0.8rem", color: "#64748b", marginTop: "1rem" }}>
+            <h5>Data Sources</h5>
+            <ul>
+              <li>Backend dispatch simulation: 52,704 10-minute intervals (leap year demo data)</li>
+              <li>Energy mix: {energyMix.totalMWh.toFixed(1)} MWh total served</li>
+              <li>
+                Sources: {energyMix.curtailedWindMWh.toFixed(1)} MWh curtailed wind,{" "}
+                {energyMix.batteryDischargeMWh.toFixed(1)} MWh battery, {energyMix.gridImportMWh.toFixed(1)} MWh grid,{" "}
+                {energyMix.btfMWh.toFixed(1)} MWh BTF
+              </li>
+            </ul>
+          </div>
+    </DashboardLayout>
   );
 }

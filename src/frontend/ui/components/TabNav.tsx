@@ -4,10 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { NavIconKey } from "./sidebarNav";
 import { sidebarNavItems } from "./sidebarNav";
-import { NavIconCurtailment, NavIconNetwork, NavIconRoi, NavIconStorage } from "./NavIcon";
+import { NavIconCurtailment, NavIconNetwork, NavIconRoi, NavIconStorage, NavIconExecutiveSummary } from "./NavIcon";
 
 function NavIcon({ name, className }: { name: NavIconKey; className?: string }) {
   switch (name) {
+    case "executive-summary":
+      return <NavIconExecutiveSummary className={className} />;
     case "curtailment":
       return <NavIconCurtailment className={className} />;
     case "load-storage":

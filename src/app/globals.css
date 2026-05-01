@@ -1263,3 +1263,93 @@ input[type="number"]:hover::-webkit-outer-spin-button {
 .metric-row:last-child {
   border-bottom: none;
 }
+
+/* ─── Executive Summary Table Styles ─────────────────────────────────────── */
+.executive-summary-table {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.executive-summary-header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.summary-subtitle {
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.kpi-section {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-soft);
+  border-radius: 10px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.kpi-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.kpi-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-border-soft);
+}
+
+.kpi-row:last-child {
+  border-bottom: none;
+}
+
+.kpi-metric {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.kpi-value {
+  font-size: 0.9375rem;
+  color: var(--color-text-primary);
+  font-weight: 600;
+  text-align: right;
+}
+
+/* Panel full-width override for Executive Summary table */
+.panel--full-width {
+  grid-column: 1 / -1;
+}
+
+/* Responsive layout for smaller screens */
+@media (max-width: 768px) {
+  .executive-summary-table {
+    gap: 1rem;
+  }
+
+  .kpi-section {
+    padding: 1rem;
+  }
+
+  .kpi-metric {
+    font-size: 0.8125rem;
+  }
+
+  .kpi-value {
+    font-size: 0.875rem;
+  }
+}

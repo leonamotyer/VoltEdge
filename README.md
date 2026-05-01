@@ -2,18 +2,56 @@
 
 Demo front end for wind-site analytics: curtailment intelligence, load and storage sizing, and network/fiber latency checks. Built with **Next.js 15** (App Router), **React 19**, **TypeScript**, and **Recharts**.
 
-## Requirements
+## 🚀 Quick Start for Presenters
 
-- [Node.js](https://nodejs.org/) 20 or newer (LTS recommended)
+### Just Want to Show the Demo?
 
-## Quick start
-
+**Run this:**
 ```bash
 npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) (Next.js default port).
+Open **http://localhost:3000** in your browser. Done! ✅
+
+The app works perfectly with **frontend-only mode** using realistic mock data.
+
+---
+
+### Need Python Calculations Too?
+
+**Two options:**
+
+**Option 1: Automatic (runs both together)**
+```bash
+npm run dev:all
+```
+
+**Option 2: Manual (run in separate terminals)**
+
+Terminal 1 - Frontend:
+```bash
+npm run dev
+```
+
+Terminal 2 - Backend (requires Python 3.11+):
+```bash
+npm run dev:backend
+```
+
+Or use the batch file (Windows):
+```bash
+start-backend.bat
+```
+
+The backend enables advanced Python-based calculations (optimization, IRR, dispatch simulation). Most features work fine without it.
+
+---
+
+## Requirements
+
+- [Node.js](https://nodejs.org/) 20 or newer (LTS recommended)
+- Python 3.11+ (optional, only if using backend calculations)
 
 ## Features
 
@@ -60,16 +98,7 @@ The CSV file must contain the following 29 columns in this exact order:
 | `price_escalation_rate_pct` | number | Annual price escalation (%) | ≥ 0 |
 | `priority_rule` | string | Power source priority | `curtailment_first`, `grid_first`, `btf_first`, `balanced` |
 
-#### Sample CSV
-
-A sample configuration file is available at `src/backend/data/sample-configurations.csv` with 15 pre-configured scenarios including:
-
-- Small test deployments
-- Medium and large production configurations
-- Budget-optimized setups
-- High-availability enterprise configs
-- Grid-free curtailment-only scenarios
-- BTF-heavy configurations
+#### Sample CSV Format
 
 **Example CSV rows:**
 
@@ -99,78 +128,109 @@ All errors are displayed in the upload panel with specific column and validation
 
 ## Scripts
 
-### Frontend (Next.js)
+### Main Commands (Presenter Friendly)
 
 | Command | Description |
 | -------- | ----------- |
-| `npm run dev` | Next.js dev server with hot reload |
+| `npm run dev` | 🎯 **Start frontend** (recommended for demos) |
+| `npm run dev:backend` | Start Python backend only |
+| `npm run dev:all` | Start frontend + backend together |
+| `start-backend.bat` | Alternative: Start Python backend (Windows) |
+
+### Development Commands
+
+| Command | Description |
+| -------- | ----------- |
 | `npm run build` | Production build (`.next/`) |
 | `npm run start` | Run the production server locally |
 | `npm test` | Vitest unit tests |
 | `npm run test:watch` | Vitest watch mode |
 | `npm run typecheck` | TypeScript check (`tsc --noEmit`) |
 
-### Backend (Python)
+### Backend Details (Optional)
 
+The Python calculation backend is **optional** - most features work without it using TypeScript mock data.
+
+**When do you need the backend?**
+- Battery optimization sweeps (10 scenarios)
+- IRR/NPV financial calculations
+- High-fidelity dispatch simulations
+
+**How to start it:**
 ```bash
-# From src/backend/ directory
-pip install -r requirements.txt
-uvicorn src.main:app --reload --port 8000
+npm run dev:all       # Starts both frontend + backend
+```
+OR
+```bash
+npm run dev:backend   # Backend only
+start-backend.bat     # Alternative (Windows)
 ```
 
-API documentation available at:
-- Swagger UI: http://localhost:8000/docs
-- ReDoc: http://localhost:8000/redoc
+**API documentation** (when backend is running):
+- **Swagger UI**: http://localhost:8000/docs
+- **ReDoc**: http://localhost:8000/redoc
 
-See [src/backend/README.md](./src/backend/README.md) for full backend documentation.
+See [src/backend/calculations/README.md](./src/backend/calculations/README.md) for backend details.
 
 ## Project Structure
 
 ```
 voltEdge/
 ├── src/
-│   ├── app/              # Next.js App Router (thin route wrappers)
-│   │   ├── curtailment/
-│   │   │   ├── page.tsx          # Route component
-│   │   │   └── data.ts           # Data loader
-│   │   ├── load-and-storage/
-│   │   ├── network-and-fiber/
-│   │   ├── roi/
+│   ├── app/                      # Next.js App Router pages
+│   │   ├── api/                  # Next.js API routes (delegates to frontend/api/)
+│   │   │   ├── curtailment/      # Curtailment analysis endpoint
+│   │   │   ├── network/          # Network latency endpoint
+│   │   │   └── load-storage/     # Battery simulation endpoint
+│   │   ├── curtailment/          # Curtailment analysis page
+│   │   ├── load-and-storage/     # Load & storage page
+│   │   ├── network-and-fiber/    # Network analysis page
+│   │   ├── roi/                  # ROI analysis page
 │   │   ├── layout.tsx
 │   │   └── globals.css
 │   │
-│   ├── backend/          # Python FastAPI backend
-│   │   ├── src/
-│   │   │   ├── main.py           # API entry point
-│   │   │   ├── api/              # REST endpoints
-│   │   │   ├── repositories/     # Data sources (AESO, SCADA, Turbine)
-│   │   │   ├── analytics/        # Business logic & analytics
-│   │   │   ├── models/           # Pydantic request/response schemas
-│   │   │   └── mocks/            # Mock data generation
-│   │   ├── data/                 # Static JSON data files
-│   │   ├── tests/                # Pytest tests
-│   │   └── requirements.txt      # Python dependencies
+│   ├── frontend/                 # TypeScript business logic & data
+│   │   ├── repositories/         # Mock data repositories (TypeScript)
+│   │   │   ├── AesoRepository.ts     # Market data (inline mock data)
+│   │   │   ├── ScadaRepository.ts    # Wind speed data (inline mock data)
+│   │   │   └── TurbineRepository.ts  # Turbine metadata (inline mock data)
+│   │   ├── api/                  # Business logic for API routes
+│   │   │   ├── curtailment.ts        # Curtailment analysis logic
+│   │   │   ├── network.ts            # Network latency calculations
+│   │   │   └── loadStorage.ts        # Battery simulation logic
+│   │   ├── battery/              # Battery configuration
+│   │   ├── gpu/                  # GPU configuration & charts
+│   │   ├── grid/                 # Grid supply configuration
+│   │   ├── components/           # Layout components
+│   │   ├── context/              # React Context providers
+│   │   ├── sections/             # Page-specific chart sections
+│   │   ├── ui/                   # AppShell, charts, KPI cards
+│   │   └── dashboard/            # Type guards & validation
 │   │
-│   └── frontend/         # TypeScript UI layer
-│       ├── battery/      # Battery configuration
-│       ├── gpu/          # GPU configuration & charts
-│       ├── grid/         # Grid supply configuration
-│       ├── components/   # Layout components (DashboardLayout, KpiGrid, etc.)
-│       ├── context/      # React Context providers
-│       ├── sections/     # Page-specific chart sections
-│       │   ├── curtailment/      # 5 curtailment charts
-│       │   ├── load-storage/     # 5 load/storage sections
-│       │   ├── network/          # 1 network chart
-│       │   └── roi/              # 3 ROI charts
-│       ├── ui/           # AppShell, charts, KPI cards, hooks
-│       └── dashboard/    # Type guards & validation
+│   └── backend/                  # Python calculation service (OPTIONAL)
+│       └── calculations/         # Heavy numerical calculations only
+│           ├── main.py           # Minimal FastAPI (8 endpoints)
+│           ├── dispatch.py       # NumPy dispatch simulation
+│           ├── optimization.py   # Battery sweep optimization
+│           ├── financials.py     # IRR/NPV calculations (SciPy)
+│           ├── gpu_config.py     # CAPEX calculations
+│           ├── requirements.txt  # Minimal deps (4 packages)
+│           └── README.md         # Backend documentation
 │
 ├── Docs/
-│   └── ARCHITECTURE.md   # Architecture documentation
-└── package.json          # Node.js dependencies
+│   └── ARCHITECTURE.md           # Architecture documentation
+├── package.json                  # Node.js dependencies
+└── start-backend.bat             # Simple Python backend startup
 ```
 
-See [Docs/ARCHITECTURE.md](./Docs/ARCHITECTURE.md) for detailed architectural patterns and design principles.
+### Architecture Notes
+
+- **Frontend-first**: Next.js handles all UI, mock data, and simple calculations
+- **TypeScript repositories**: Mock data as inline TypeScript (no JSON files)
+- **Python optional**: Only needed for heavy NumPy/SciPy calculations
+- **Simple startup**: `npm run dev` starts everything you need for demos
+
+See [Docs/ARCHITECTURE.md](./Docs/ARCHITECTURE.md) for detailed architectural patterns.
 
 ## License
 

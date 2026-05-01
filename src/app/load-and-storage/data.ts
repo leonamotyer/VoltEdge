@@ -2,8 +2,7 @@
  * Load and storage data loader — mock series shaped by sidebar configuration
  * until the Python backend drives this route.
  */
-import type { BatteryConfig } from "@/frontend/battery/types";
-import type { GridSupplyConfig } from "@/frontend/grid/types";
+import type { BatteryConfig, GridSupplyConfig } from "@/frontend/types/config";
 
 export interface LoadAndStoragePageParams {
   batteryConfig: BatteryConfig;

@@ -1,12 +1,12 @@
 "use client";
 
-import { isNetworkData } from "@/frontend/dashboard/guards";
+import { isNetworkData } from "@/frontend/components/tables/guards";
 import { DataBoundPage } from "@/frontend/components/DataBoundPage";
 import { DashboardLayout } from "@/frontend/components/DashboardLayout";
 import { KpiGrid } from "@/frontend/components/KpiGrid";
 import { PanelBento } from "@/frontend/components/PanelBento";
 import { KpiCard } from "@/frontend/ui/components/KpiCard";
-import { LatencyThresholdChart } from "@/frontend/sections/network/LatencyThresholdChart";
+import { LatencyThresholdChart } from "@/frontend/components/charts/network/LatencyThresholdChart";
 import { loadNetworkAndFiberPageData } from "./data";
 
 export default function NetworkAndFiberPage() {
