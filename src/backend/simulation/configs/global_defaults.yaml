@@ -1,0 +1,5 @@
+finance_infrastructure_defaults:
+  gpus_per_rack: 8
+  racks_per_container: 12
+  rack_cost: 8000.0
+  container_cost: 250000.0
